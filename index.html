@@ -9,109 +9,112 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-
+  
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
       margin: 0; padding: 0;
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start;
+      background: #f5f6fa;
     }
     header {
-      background: rgba(0,0,0,0.6);
-      color: #fff; padding: 20px; font-size: 26px; font-weight: bold;
-      text-align: center; width: 100%; box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      background: #6a11cb;
+      color: #fff; padding: 20px;
+      text-align: center; font-size: 24px;
+      font-weight: bold; box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
     .container {
-      max-width: 500px; width: 90%;
-      background: #fff; margin: 20px auto; padding: 25px;
-      border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      text-align: center; animation: fadeIn 0.6s ease;
+      max-width: 1200px; margin: 20px auto; padding: 10px;
     }
-    input, button {
-      width: 90%; padding: 12px; margin: 10px 0;
-      border-radius: 8px; border: 1px solid #ccc; font-size: 16px;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+      gap: 20px;
     }
-    button {
-      background: #6a11cb; color: #fff; font-weight: bold;
-      border: none; cursor: pointer; transition: 0.3s;
-    }
-    button:hover { background: #4a0f91; transform: scale(1.05); }
-    .hidden { display: none; }
-    .packages { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
-    .package {
-      flex: 1 1 40%; min-width: 150px;
-      border-radius: 12px; padding: 20px;
-      background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    .card {
+      background: #fff;
+      border-radius: 12px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center; padding: 25px;
+      transition: 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .card h3 { margin: 0; color: #6a11cb; }
+    .card p { font-size: 18px; margin: 10px 0; }
+    .card button {
+      padding: 10px 20px; border: none; border-radius: 8px;
+      background: #2575fc; color: #fff; font-weight: bold;
       cursor: pointer; transition: 0.3s;
     }
-    .package:hover { background: #f0e6f9; transform: translateY(-6px); }
-    .package h4 { margin: 0; color: #6a11cb; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { border: 1px solid #ccc; padding: 8px; font-size: 14px; }
-    th { background: #eee; }
-    .status { padding: 4px 8px; border-radius: 6px; font-size: 13px; }
-    .pending { background: #f39c12; color: #fff; }
-    .done { background: #27ae60; color: #fff; }
-    .toast {
-      position: fixed; bottom: 20px; right: 20px;
-      background: #333; color: #fff; padding: 12px 20px;
-      border-radius: 8px; opacity: 0; pointer-events: none;
-      transition: 0.5s;
+    .card button:hover { background: #1554c0; }
+    /* Modal */
+    .modal {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.6); display: none;
+      align-items: center; justify-content: center;
     }
-    .toast.show { opacity: 1; pointer-events: auto; }
-    @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+    .modal-content {
+      background: #fff; padding: 25px; border-radius: 12px;
+      width: 90%; max-width: 400px; text-align: center;
+    }
+    .modal input, .modal button {
+      width: 90%; margin: 8px 0; padding: 12px;
+      border-radius: 8px; border: 1px solid #ccc;
+    }
+    .modal button {
+      background: #6a11cb; color: #fff; border: none;
+    }
+    .hidden { display: none; }
+    /* Admin */
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 20px;
+    }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+    th { background: #6a11cb; color: #fff; }
+    .status.pending { color: #e67e22; font-weight: bold; }
+    .status.done { color: #27ae60; font-weight: bold; }
   </style>
 </head>
 <body>
   <header>Roma Shop</header>
 
-  <!-- Login/Register -->
+  <!-- تسجيل الدخول -->
   <div class="container" id="auth-section">
-    <h3>تسجيل الدخول</h3>
+    <h2>تسجيل الدخول</h2>
     <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
     <input type="password" id="loginPassword" placeholder="كلمة المرور">
-    <button onclick="login()">تسجيل الدخول</button>
-    <p>ليس لديك حساب؟ <a href="#" onclick="showRegister()">سجل الآن</a></p>
+    <button onclick="login()">دخول</button>
   </div>
 
-  <div class="container hidden" id="register-section">
-    <h3>تسجيل حساب جديد</h3>
-    <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
-    <input type="password" id="regPassword" placeholder="كلمة المرور">
-    <button onclick="register()">تسجيل</button>
-    <p><a href="#" onclick="showLogin()">لديك حساب؟ سجل دخول</a></p>
-  </div>
-
-  <!-- User Shop -->
+  <!-- المتجر -->
   <div class="container hidden" id="shop-section">
-    <h3>اختر الباقة</h3>
-    <div class="packages" id="packages"></div>
+    <h2>اختر الباقة</h2>
+    <div class="grid" id="packages"></div>
     <button onclick="logout()">تسجيل خروج</button>
   </div>
 
-  <!-- Order Form -->
-  <div class="container hidden" id="order-section">
-    <h3>إكمال الطلب</h3>
-    <p>قم بالتحويل على رقم فودافون كاش: <b>01031090116</b></p>
-    <input type="text" id="instaUser" placeholder="اسم مستخدم إنستجرام">
-    <input type="text" id="phone" placeholder="رقم الموبايل">
-    <input type="file" id="receipt">
-    <button onclick="submitOrder()">إرسال الطلب</button>
+  <!-- نافذة الطلب -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content">
+      <h3>إكمال الطلب</h3>
+      <p>ادفع على: <b>01031090116</b></p>
+      <input type="text" id="instaUser" placeholder="اسم مستخدم إنستجرام">
+      <input type="text" id="phone" placeholder="رقم الموبايل">
+      <input type="file" id="receipt">
+      <button onclick="submitOrder()">إرسال الطلب</button>
+      <button onclick="closeModal()">إغلاق</button>
+    </div>
   </div>
 
-  <!-- Admin Panel -->
+  <!-- لوحة التحكم -->
   <div class="container hidden" id="admin-section">
-    <h3>لوحة التحكم</h3>
+    <h2>لوحة التحكم</h2>
     <table>
       <thead>
         <tr>
           <th>المستخدم</th>
           <th>الباقة</th>
           <th>إنستجرام</th>
-          <th>هاتف</th>
+          <th>الهاتف</th>
           <th>الحالة</th>
           <th>إجراء</th>
         </tr>
@@ -120,9 +123,6 @@
     </table>
     <button onclick="logout()">تسجيل خروج</button>
   </div>
-
-  <!-- Toast Notification -->
-  <div id="toast" class="toast"></div>
 
 <script>
   // Firebase Config
@@ -140,111 +140,78 @@
   const db = firebase.firestore();
   const storage = firebase.storage();
 
-  const adminEmail = "admin@romashop.com"; // أدمن انت عامل حسابه في Firebase
+  const adminEmail = "admin@romashop.com"; // إيميل الأدمن اللي تعمله في Firebase
   const packages = [
     {followers:50, price:10},
     {followers:100, price:20},
-    {followers:200, price:40},
+    {followers:250, price:50},
     {followers:500, price:100},
     {followers:1000, price:200}
   ];
   let selectedPackage = null;
 
-  // Helpers
-  function toast(msg, success=false){
-    const t=document.getElementById("toast");
-    t.innerText=msg;
-    t.style.background=success?"#27ae60":"#e74c3c";
-    t.classList.add("show");
-    setTimeout(()=>t.classList.remove("show"),3000);
-  }
-
-  function showRegister(){document.getElementById("auth-section").classList.add("hidden");document.getElementById("register-section").classList.remove("hidden");}
-  function showLogin(){document.getElementById("register-section").classList.add("hidden");document.getElementById("auth-section").classList.remove("hidden");}
-
+  // تسجيل الدخول
   function login(){
     const email=document.getElementById("loginEmail").value;
-    const password=document.getElementById("loginPassword").value;
-    auth.signInWithEmailAndPassword(email,password).then(()=>{
-      if(email===adminEmail){
-        loadOrders();
-        document.getElementById("admin-section").classList.remove("hidden");
-      }else{
-        renderPackages();
-        document.getElementById("shop-section").classList.remove("hidden");
-      }
+    const pass=document.getElementById("loginPassword").value;
+    auth.signInWithEmailAndPassword(email,pass).then(()=>{
       document.getElementById("auth-section").classList.add("hidden");
-    }).catch(e=>toast(e.message));
-  }
-
-  function register(){
-    const email=document.getElementById("regEmail").value;
-    const password=document.getElementById("regPassword").value;
-    if(password.length<6){toast("كلمة المرور قصيرة جدًا");return;}
-    auth.createUserWithEmailAndPassword(email,password).then(()=>{
-      toast("تم التسجيل بنجاح، سجل دخول الآن",true);
-      showLogin();
-    }).catch(e=>toast(e.message));
+      if(email===adminEmail){ loadOrders(); document.getElementById("admin-section").classList.remove("hidden"); }
+      else { renderPackages(); document.getElementById("shop-section").classList.remove("hidden"); }
+    }).catch(e=>alert(e.message));
   }
 
   function logout(){auth.signOut().then(()=>location.reload());}
 
   function renderPackages(){
-    const div=document.getElementById("packages");
-    div.innerHTML="";
+    const div=document.getElementById("packages"); div.innerHTML="";
     packages.forEach(p=>{
-      const el=document.createElement("div");
-      el.className="package";
-      el.innerHTML=`<h4>${p.followers} متابع</h4><p>${p.price} جنيه</p>`;
-      el.onclick=()=>{
+      const card=document.createElement("div");
+      card.className="card";
+      card.innerHTML=`<h3>${p.followers} متابع</h3><p>${p.price} جنيه</p><button>اطلب الآن</button>`;
+      card.querySelector("button").onclick=()=>{
         selectedPackage=p;
-        document.getElementById("shop-section").classList.add("hidden");
-        document.getElementById("order-section").classList.remove("hidden");
+        document.getElementById("orderModal").style.display="flex";
       };
-      div.appendChild(el);
+      div.appendChild(card);
     });
   }
 
+  function closeModal(){document.getElementById("orderModal").style.display="none";}
+
   async function submitOrder(){
-    const instaUser=document.getElementById("instaUser").value.trim();
-    const phone=document.getElementById("phone").value.trim();
+    const insta=document.getElementById("instaUser").value;
+    const phone=document.getElementById("phone").value;
     const file=document.getElementById("receipt").files[0];
+    if(!insta||!phone||!file){alert("املأ جميع البيانات");return;}
 
-    if(!instaUser||!phone||!file){toast("من فضلك املأ جميع الحقول");return;}
-
-    let fileURL="";
-    try{
-      const ref=storage.ref("receipts/"+Date.now()+"_"+file.name);
-      await ref.put(file);
-      fileURL=await ref.getDownloadURL();
-    }catch(err){toast("فشل رفع الصورة");return;}
+    const ref=storage.ref("receipts/"+Date.now()+"_"+file.name);
+    await ref.put(file);
+    const url=await ref.getDownloadURL();
 
     await db.collection("orders").add({
       user:auth.currentUser.email,
       package:selectedPackage,
-      instaUser, phone,
-      receipt:fileURL,
-      status:"قيد المراجعة",
-      createdAt:new Date()
+      instaUser:insta, phone, receipt:url,
+      status:"قيد المراجعة", createdAt:new Date()
     });
-    toast("تم إرسال الطلب بنجاح",true);
-    setTimeout(()=>location.reload(),1500);
+    alert("تم إرسال الطلب بنجاح");
+    closeModal();
   }
 
   function loadOrders(){
     db.collection("orders").orderBy("createdAt","desc").onSnapshot(snap=>{
-      const tbody=document.getElementById("ordersTable");
-      tbody.innerHTML="";
+      const tbody=document.getElementById("ordersTable"); tbody.innerHTML="";
       snap.forEach(doc=>{
-        const data=doc.data();
+        const d=doc.data();
         const tr=document.createElement("tr");
         tr.innerHTML=`
-          <td>${data.user}</td>
-          <td>${data.package.followers} متابع - ${data.package.price}ج</td>
-          <td>${data.instaUser}</td>
-          <td>${data.phone}</td>
-          <td><span class="status ${data.status==="قيد المراجعة"?"pending":"done"}">${data.status}</span></td>
-          <td>${data.status==="قيد المراجعة"?`<button onclick="markDone('${doc.id}')">اكتمل</button>`:""}</td>
+          <td>${d.user}</td>
+          <td>${d.package.followers} - ${d.package.price}ج</td>
+          <td>${d.instaUser}</td>
+          <td>${d.phone}</td>
+          <td class="status ${d.status==="قيد المراجعة"?"pending":"done"}">${d.status}</td>
+          <td>${d.status==="قيد المراجعة"?`<button onclick="markDone('${doc.id}')">تم</button>`:""}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -252,7 +219,7 @@
   }
 
   function markDone(id){
-    db.collection("orders").doc(id).update({status:"تم الاستلام"}).then(()=>toast("تم تحديث الحالة",true));
+    db.collection("orders").doc(id).update({status:"تم الاستلام"});
   }
 </script>
 </body>
