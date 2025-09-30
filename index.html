@@ -13,49 +13,56 @@
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #8e44ad, #3498db);
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
       margin: 0; padding: 0;
-      min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
     }
     header {
       background: rgba(0,0,0,0.6);
-      color: #fff; padding: 15px; font-size: 24px; font-weight: bold;
-      text-align: center; width: 100%;
+      color: #fff; padding: 20px; font-size: 26px; font-weight: bold;
+      text-align: center; width: 100%; box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
     .container {
-      max-width: 600px; width: 90%;
+      max-width: 500px; width: 90%;
       background: #fff; margin: 20px auto; padding: 25px;
-      border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      text-align: center;
-      animation: fadeIn 0.5s ease-in-out;
+      border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center; animation: fadeIn 0.6s ease;
     }
     input, button {
       width: 90%; padding: 12px; margin: 10px 0;
       border-radius: 8px; border: 1px solid #ccc; font-size: 16px;
     }
     button {
-      background: #8e44ad; color: #fff; font-weight: bold;
+      background: #6a11cb; color: #fff; font-weight: bold;
       border: none; cursor: pointer; transition: 0.3s;
     }
-    button:hover { background: #732d91; transform: scale(1.05); }
+    button:hover { background: #4a0f91; transform: scale(1.05); }
     .hidden { display: none; }
     .packages { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
     .package {
-      flex: 1 1 40%; min-width: 120px;
-      border-radius: 10px; padding: 20px;
-      background: #f9f9f9; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      flex: 1 1 40%; min-width: 150px;
+      border-radius: 12px; padding: 20px;
+      background: linear-gradient(135deg, #fdfbfb, #ebedee);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       cursor: pointer; transition: 0.3s;
     }
-    .package:hover { background: #f0e6f9; transform: translateY(-5px); }
-    .package h4 { margin: 0; color: #8e44ad; }
+    .package:hover { background: #f0e6f9; transform: translateY(-6px); }
+    .package h4 { margin: 0; color: #6a11cb; }
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th, td { border: 1px solid #ccc; padding: 8px; font-size: 14px; }
     th { background: #eee; }
     .status { padding: 4px 8px; border-radius: 6px; font-size: 13px; }
     .pending { background: #f39c12; color: #fff; }
     .done { background: #27ae60; color: #fff; }
-    @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+    .toast {
+      position: fixed; bottom: 20px; right: 20px;
+      background: #333; color: #fff; padding: 12px 20px;
+      border-radius: 8px; opacity: 0; pointer-events: none;
+      transition: 0.5s;
+    }
+    .toast.show { opacity: 1; pointer-events: auto; }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
   </style>
 </head>
 <body>
@@ -114,6 +121,9 @@
     <button onclick="logout()">تسجيل خروج</button>
   </div>
 
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
 <script>
   // Firebase Config
   const firebaseConfig = {
@@ -130,8 +140,7 @@
   const db = firebase.firestore();
   const storage = firebase.storage();
 
-  const adminEmail = "admin@romashop.com"; // الأدمن اللي عملته في Firebase
-
+  const adminEmail = "admin@romashop.com"; // أدمن انت عامل حسابه في Firebase
   const packages = [
     {followers:50, price:10},
     {followers:100, price:20},
@@ -139,16 +148,24 @@
     {followers:500, price:100},
     {followers:1000, price:200}
   ];
-
   let selectedPackage = null;
+
+  // Helpers
+  function toast(msg, success=false){
+    const t=document.getElementById("toast");
+    t.innerText=msg;
+    t.style.background=success?"#27ae60":"#e74c3c";
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"),3000);
+  }
 
   function showRegister(){document.getElementById("auth-section").classList.add("hidden");document.getElementById("register-section").classList.remove("hidden");}
   function showLogin(){document.getElementById("register-section").classList.add("hidden");document.getElementById("auth-section").classList.remove("hidden");}
 
   function login(){
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-    auth.signInWithEmailAndPassword(email, password).then(()=>{
+    const email=document.getElementById("loginEmail").value;
+    const password=document.getElementById("loginPassword").value;
+    auth.signInWithEmailAndPassword(email,password).then(()=>{
       if(email===adminEmail){
         loadOrders();
         document.getElementById("admin-section").classList.remove("hidden");
@@ -157,55 +174,65 @@
         document.getElementById("shop-section").classList.remove("hidden");
       }
       document.getElementById("auth-section").classList.add("hidden");
-    }).catch(e=>alert(e.message));
+    }).catch(e=>toast(e.message));
   }
 
   function register(){
-    const email = document.getElementById("regEmail").value;
-    const password = document.getElementById("regPassword").value;
+    const email=document.getElementById("regEmail").value;
+    const password=document.getElementById("regPassword").value;
+    if(password.length<6){toast("كلمة المرور قصيرة جدًا");return;}
     auth.createUserWithEmailAndPassword(email,password).then(()=>{
-      alert("تم التسجيل بنجاح، قم بتسجيل الدخول الآن");
+      toast("تم التسجيل بنجاح، سجل دخول الآن",true);
       showLogin();
-    }).catch(e=>alert(e.message));
+    }).catch(e=>toast(e.message));
   }
 
   function logout(){auth.signOut().then(()=>location.reload());}
 
   function renderPackages(){
-    const div = document.getElementById("packages");
+    const div=document.getElementById("packages");
     div.innerHTML="";
     packages.forEach(p=>{
-      const el = document.createElement("div");
+      const el=document.createElement("div");
       el.className="package";
       el.innerHTML=`<h4>${p.followers} متابع</h4><p>${p.price} جنيه</p>`;
-      el.onclick=()=>{selectedPackage=p;document.getElementById("shop-section").classList.add("hidden");document.getElementById("order-section").classList.remove("hidden");};
+      el.onclick=()=>{
+        selectedPackage=p;
+        document.getElementById("shop-section").classList.add("hidden");
+        document.getElementById("order-section").classList.remove("hidden");
+      };
       div.appendChild(el);
     });
   }
 
   async function submitOrder(){
-    const instaUser=document.getElementById("instaUser").value;
-    const phone=document.getElementById("phone").value;
+    const instaUser=document.getElementById("instaUser").value.trim();
+    const phone=document.getElementById("phone").value.trim();
     const file=document.getElementById("receipt").files[0];
+
+    if(!instaUser||!phone||!file){toast("من فضلك املأ جميع الحقول");return;}
+
     let fileURL="";
-    if(file){
+    try{
       const ref=storage.ref("receipts/"+Date.now()+"_"+file.name);
       await ref.put(file);
       fileURL=await ref.getDownloadURL();
-    }
+    }catch(err){toast("فشل رفع الصورة");return;}
+
     await db.collection("orders").add({
       user:auth.currentUser.email,
       package:selectedPackage,
       instaUser, phone,
       receipt:fileURL,
-      status:"قيد المراجعة"
+      status:"قيد المراجعة",
+      createdAt:new Date()
     });
-    alert("تم إرسال الطلب بنجاح");
-    location.reload();
+    toast("تم إرسال الطلب بنجاح",true);
+    setTimeout(()=>location.reload(),1500);
   }
 
   function loadOrders(){
-    db.collection("orders").onSnapshot(snap=>{
+    db.collection("orders").orderBy("createdAt","desc").onSnapshot(snap=>{
       const tbody=document.getElementById("ordersTable");
       tbody.innerHTML="";
       snap.forEach(doc=>{
@@ -225,7 +252,7 @@
   }
 
   function markDone(id){
-    db.collection("orders").doc(id).update({status:"تم الاستلام"});
+    db.collection("orders").doc(id).update({status:"تم الاستلام"}).then(()=>toast("تم تحديث الحالة",true));
   }
 </script>
 </body>
