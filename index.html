@@ -6,6 +6,11 @@
     <title>Roma Shop - متابعات إنستجرام</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -38,7 +43,6 @@
             overflow-x: hidden;
         }
 
-        /* تأثيرات الخلفية */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -90,18 +94,10 @@
         }
 
         @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            33% {
-                transform: translate(30px, -50px) rotate(120deg);
-            }
-            66% {
-                transform: translate(-20px, 20px) rotate(240deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -50px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
         }
 
         .container {
@@ -110,7 +106,6 @@
             padding: 0 20px;
         }
 
-        /* الهيدر */
         header {
             display: flex;
             justify-content: space-between;
@@ -143,7 +138,6 @@
 
         nav ul li {
             margin-left: 25px;
-            position: relative;
         }
 
         nav ul li a {
@@ -187,16 +181,6 @@
             font-size: 18px;
         }
 
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--light);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* الهيرو سيكشن */
         .hero {
             text-align: center;
             padding: 60px 0;
@@ -279,7 +263,6 @@
             background: linear-gradient(45deg, var(--accent), var(--primary));
         }
 
-        /* المميزات */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -342,7 +325,6 @@
             line-height: 1.6;
         }
 
-        /* الباقات */
         .packages {
             margin-bottom: 80px;
         }
@@ -487,7 +469,6 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        /* الفوتر */
         footer {
             text-align: center;
             padding: 40px 0;
@@ -496,7 +477,6 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* الصفحات */
         .page {
             display: none;
             animation: fadeIn 0.5s;
@@ -512,7 +492,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* النماذج */
         .login-form, .orders-page, .payment-page, .admin-page {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
@@ -612,7 +591,6 @@
             color: #4285F4;
         }
 
-        /* الطلبات */
         .order-item {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
@@ -672,7 +650,6 @@
             display: none;
         }
 
-        /* صفحة الدفع */
         .payment-info {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
@@ -706,7 +683,6 @@
             color: var(--accent);
         }
 
-        /* رابط الأدمن */
         .admin-link {
             position: fixed;
             bottom: 30px;
@@ -733,19 +709,18 @@
             margin-right: 8px;
         }
 
-        /* التجاوب مع الشاشات الصغيرة */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            
-            .package-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            }
-            
-            .package-card.popular {
-                transform: none;
-            }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -754,14 +729,10 @@
                 text-align: center;
             }
             
-            nav {
-                width: 100%;
-                margin-top: 20px;
-            }
-            
             nav ul {
                 justify-content: center;
                 flex-wrap: wrap;
+                margin-top: 20px;
             }
             
             nav ul li {
@@ -772,54 +743,12 @@
                 font-size: 2.2rem;
             }
             
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
             .package-grid {
                 grid-template-columns: 1fr;
             }
             
-            .admin-link {
-                bottom: 20px;
-                left: 20px;
-                padding: 10px 15px;
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .container {
-                padding: 0 15px;
-            }
-            
-            .login-form, .orders-page, .payment-page, .admin-page {
-                padding: 25px;
-            }
-            
-            .hero {
-                padding: 40px 0;
-            }
-            
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .feature-card, .package-card {
-                padding: 20px;
-            }
-            
-            .order-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .order-status {
-                margin-top: 10px;
+            .package-card.popular {
+                transform: none;
             }
         }
     </style>
@@ -833,8 +762,8 @@
         <div class="bg-circle"></div>
     </div>
 
-    <!-- رابط الدخول إلى صفحة الأدمن -->
-    <a href="#" class="admin-link" id="adminLink" onclick="showPage('adminPage')"><i class="fas fa-cog"></i> لوحة التحكم</a>
+    <!-- رابط الأدمن -->
+    <a href="#" class="admin-link" onclick="showPage('adminPage')"><i class="fas fa-cog"></i> لوحة التحكم</a>
 
     <!-- الصفحة الرئيسية -->
     <div id="homePage" class="page active">
@@ -855,7 +784,7 @@
 
             <section class="hero">
                 <h1>مصدرك الموثوق لزيادة المتابعين</h1>
-                <p>احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار وأعلى جودة في السوق. نضمن لك النتائج مع خدمة عملاء على مدار الساعة.</p>
+                <p>احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار وأعلى جودة في السوق</p>
                 <a href="#packages" class="btn btn-accent"><i class="fas fa-shopping-cart"></i> ابدأ الآن</a>
             </section>
 
@@ -863,23 +792,23 @@
                 <div class="feature-card">
                     <i class="fas fa-shield-alt"></i>
                     <h3>ضمان الجودة</h3>
-                    <p>نضمن لك متابعين حقيقيين بنسبة 100% مع إمكانية استرجاع الأموال في حالة عدم الرضا</p>
+                    <p>نضمن لك متابعين حقيقيين بنسبة 100% مع إمكانية استرجاع الأموال</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-bolt"></i>
                     <h3>تسليم فوري</h3>
-                    <p>تبدأ خدمتنا فور تأكيد الدفع، مع تسليم خلال 24-48 ساعة كحد أقصى</p>
+                    <p>تبدأ خدمتنا فور تأكيد الدفع، مع تسليم خلال 24-48 ساعة</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-lock"></i>
                     <h3>آمن تماماً</h3>
-                    <p>خدمتنا آمنة تماماً ولا تحتاج لكلمة مرور حسابك. نضمن خصوصيتك وأمانك</p>
+                    <p>خدمتنا آمنة تماماً ولا تحتاج لكلمة مرور حسابك</p>
                 </div>
             </section>
 
             <section class="packages" id="packages">
                 <h2 class="section-title">اختر الباقة المناسبة</h2>
-                <p style="text-align: center; margin-bottom: 50px; color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;">باقات متنوعة تناسب جميع الميزانيات والاحتياجات</p>
+                <p style="text-align: center; margin-bottom: 50px; color: rgba(255, 255, 255, 0.8);">باقات متنوعة تناسب جميع الميزانيات</p>
 
                 <div class="package-grid">
                     <div class="package-card">
@@ -916,7 +845,7 @@
 
                 <div class="custom-package">
                     <h3>باقة مخصصة</h3>
-                    <p>هل تحتاج إلى أكثر من 1000 متابع؟ تواصل معنا وسنقدم لك أفضل عرض يناسب احتياجاتك</p>
+                    <p>هل تحتاج إلى أكثر من 1000 متابع؟ تواصل معنا</p>
                     <button class="btn btn-accent"><i class="fas fa-headset"></i> تواصل معنا</button>
                 </div>
             </section>
@@ -995,7 +924,7 @@
 
             <h2 class="section-title">طلباتي</h2>
             <div id="ordersList">
-                <!-- سيتم ملء الطلبات هنا بواسطة الجافاسكريبت -->
+                <!-- الطلبات تظهر هنا -->
             </div>
         </div>
     </div>
@@ -1052,7 +981,9 @@
                     <input type="file" id="receipt" class="form-control" accept="image/*">
                 </div>
 
-                <button class="btn btn-accent" style="width: 100%;" onclick="submitOrder()">تأكيد الطلب</button>
+                <button class="btn btn-accent" style="width: 100%;" onclick="submitOrder()" id="submitOrderBtn">
+                    <span id="submitOrderText">تأكيد الطلب</span>
+                </button>
             </div>
         </div>
     </div>
@@ -1092,16 +1023,30 @@
             <div id="adminPanel" class="hidden">
                 <h2 class="section-title">إدارة الطلبات</h2>
                 <div id="adminOrdersList">
-                    <!-- سيتم ملء الطلبات هنا بواسطة الجافاسكريبت -->
+                    <!-- الطلبات تظهر هنا -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBivKIbukDK-8LKpWAjHlXxaYxiRd2ieqc",
+            authDomain: "roma-shop-2e328.firebaseapp.com",
+            projectId: "roma-shop-2e328",
+            storageBucket: "roma-shop-2e328.firebasestorage.app",
+            messagingSenderId: "632843292993",
+            appId: "1:632843292993:web:2d8706665c09cc3ecb51c0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         // بيانات التطبيق
         let selectedPackage = { amount: 0, price: 0 };
-        let orders = JSON.parse(localStorage.getItem('romaShopOrders')) || [];
+        let orders = [];
         let isAdminLoggedIn = localStorage.getItem('romaShopAdminLoggedIn') === 'true';
 
         // عرض الصفحة المحددة وإخفاء الأخرى
@@ -1111,16 +1056,14 @@
             });
             document.getElementById(pageId).classList.add('active');
             
-            // إذا كانت صفحة الطلبات، قم بتحديث القائمة
             if (pageId === 'ordersPage') {
-                updateOrdersList();
+                loadOrders();
             }
             
-            // إذا كانت صفحة الأدمن وكان مسجل الدخول، اعرض لوحة التحكم
             if (pageId === 'adminPage' && isAdminLoggedIn) {
                 document.getElementById('adminLogin').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                updateAdminOrdersList();
+                loadAdminOrders();
             } else if (pageId === 'adminPage' && !isAdminLoggedIn) {
                 document.getElementById('adminLogin').classList.remove('hidden');
                 document.getElementById('adminPanel').classList.add('hidden');
@@ -1148,7 +1091,7 @@
         }
 
         // تقديم الطلب
-        function submitOrder() {
+        async function submitOrder() {
             const username = document.getElementById('username').value;
             const phone = document.getElementById('phone').value;
             const receipt = document.getElementById('receipt').files[0];
@@ -1158,21 +1101,34 @@
                 return;
             }
             
-            const newOrder = {
-                id: Date.now(),
-                package: selectedPackage,
-                username,
-                phone,
-                status: 'قيد المراجعة',
-                date: new Date().toLocaleDateString('ar-EG')
-            };
+            const submitBtn = document.getElementById('submitOrderBtn');
+            const submitText = document.getElementById('submitOrderText');
             
-            orders.push(newOrder);
-            localStorage.setItem('romaShopOrders', JSON.stringify(orders));
+            submitBtn.disabled = true;
+            submitText.innerHTML = '<div class="loading"></div> جاري إرسال الطلب...';
             
-            alert('تم تقديم طلبك بنجاح! سيتم مراجعته قريباً.');
-            resetPaymentForm();
-            showPage('ordersPage');
+            try {
+                const newOrder = {
+                    package: selectedPackage,
+                    username,
+                    phone,
+                    status: 'قيد المراجعة',
+                    date: new Date().toLocaleDateString('ar-EG'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await db.collection('orders').add(newOrder);
+                
+                alert('تم تقديم طلبك بنجاح! سيتم مراجعته قريباً.');
+                resetPaymentForm();
+                showPage('ordersPage');
+            } catch (error) {
+                console.error('Error adding order: ', error);
+                alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
+            } finally {
+                submitBtn.disabled = false;
+                submitText.textContent = 'تأكيد الطلب';
+            }
         }
 
         // إعادة تعيين نموذج الدفع
@@ -1182,42 +1138,107 @@
             document.getElementById('receipt').value = '';
         }
 
-        // تحديث قائمة الطلبات
-        function updateOrdersList() {
+        // تحميل الطلبات
+        async function loadOrders() {
             const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = '<p style="text-align: center;">جاري تحميل الطلبات...</p>';
             
-            if (orders.length === 0) {
-                ordersList.innerHTML = `
-                    <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                        <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <h3>لا توجد طلبات حالياً</h3>
-                        <p>بمجرد إرسال طلبك، سيظهر هنا</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let ordersHTML = '';
-            orders.forEach(order => {
-                const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
+            try {
+                const snapshot = await db.collection('orders')
+                    .orderBy('timestamp', 'desc')
+                    .get();
                 
-                ordersHTML += `
-                    <div class="order-item">
-                        <div class="order-header">
-                            <div>
-                                <strong>طلب #${order.id}</strong>
-                                <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
-                            </div>
-                            <div class="order-status ${statusClass}">${order.status}</div>
+                if (snapshot.empty) {
+                    ordersList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                            <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3>لا توجد طلبات حالياً</h3>
+                            <p>بمجرد إرسال طلبك، سيظهر هنا</p>
                         </div>
-                        <p><strong>اسم المستخدم:</strong> @${order.username}</p>
-                        <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
-                        <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
-                    </div>
-                `;
-            });
+                    `;
+                    return;
+                }
+                
+                let ordersHTML = '';
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
+                    
+                    ordersHTML += `
+                        <div class="order-item">
+                            <div class="order-header">
+                                <div>
+                                    <strong>طلب #${doc.id.slice(-6)}</strong>
+                                    <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
+                                </div>
+                                <div class="order-status ${statusClass}">${order.status}</div>
+                            </div>
+                            <p><strong>اسم المستخدم:</strong> @${order.username}</p>
+                            <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
+                            <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
+                        </div>
+                    `;
+                });
+                
+                ordersList.innerHTML = ordersHTML;
+            } catch (error) {
+                console.error('Error loading orders: ', error);
+                ordersList.innerHTML = '<p style="text-align: center; color: var(--danger);">حدث خطأ في تحميل الطلبات</p>';
+            }
+        }
+
+        // تحميل طلبات الأدمن
+        async function loadAdminOrders() {
+            const adminOrdersList = document.getElementById('adminOrdersList');
+            adminOrdersList.innerHTML = '<p style="text-align: center;">جاري تحميل الطلبات...</p>';
             
-            ordersList.innerHTML = ordersHTML;
+            try {
+                const snapshot = await db.collection('orders')
+                    .orderBy('timestamp', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    adminOrdersList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                            <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3>لا توجد طلبات حالياً</h3>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let ordersHTML = '';
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
+                    
+                    ordersHTML += `
+                        <div class="order-item">
+                            <div class="order-header">
+                                <div>
+                                    <strong>طلب #${doc.id.slice(-6)}</strong>
+                                    <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
+                                </div>
+                                <div class="order-status ${statusClass}">${order.status}</div>
+                            </div>
+                            <p><strong>اسم المستخدم:</strong> @${order.username}</p>
+                            <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
+                            <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
+                            <div class="admin-actions">
+                                ${order.status === 'قيد المراجعة' ? 
+                                    `<button class="btn btn-success btn-sm" onclick="completeOrder('${doc.id}')">تأكيد الإرسال</button>` : 
+                                    ''}
+                                <button class="btn btn-accent btn-sm" onclick="deleteOrder('${doc.id}')">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                adminOrdersList.innerHTML = ordersHTML;
+            } catch (error) {
+                console.error('Error loading admin orders: ', error);
+                adminOrdersList.innerHTML = '<p style="text-align: center; color: var(--danger);">حدث خطأ في تحميل الطلبات</p>';
+            }
         }
 
         // تسجيل دخول الأدمن
@@ -1230,7 +1251,7 @@
                 localStorage.setItem('romaShopAdminLoggedIn', 'true');
                 document.getElementById('adminLogin').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                updateAdminOrdersList();
+                loadAdminOrders();
             } else {
                 alert('البريد الإلكتروني أو كلمة المرور غير صحيحة');
             }
@@ -1246,78 +1267,37 @@
             document.getElementById('adminPassword').value = '';
         }
 
-        // تحديث قائمة طلبات الأدمن
-        function updateAdminOrdersList() {
-            const adminOrdersList = document.getElementById('adminOrdersList');
-            
-            if (orders.length === 0) {
-                adminOrdersList.innerHTML = `
-                    <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                        <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <h3>لا توجد طلبات حالياً</h3>
-                    </div>
-                `;
-                return;
-            }
-            
-            let ordersHTML = '';
-            orders.forEach(order => {
-                const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
-                
-                ordersHTML += `
-                    <div class="order-item">
-                        <div class="order-header">
-                            <div>
-                                <strong>طلب #${order.id}</strong>
-                                <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
-                            </div>
-                            <div class="order-status ${statusClass}">${order.status}</div>
-                        </div>
-                        <p><strong>اسم المستخدم:</strong> @${order.username}</p>
-                        <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
-                        <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
-                        <div class="admin-actions">
-                            ${order.status === 'قيد المراجعة' ? 
-                                `<button class="btn btn-success btn-sm" onclick="completeOrder(${order.id})">تأكيد الإرسال</button>` : 
-                                ''}
-                            <button class="btn btn-accent btn-sm" onclick="deleteOrder(${order.id})">حذف</button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            adminOrdersList.innerHTML = ordersHTML;
-        }
-
-        // إكمال الطلب (تغيير الحالة إلى تم الإرسال)
-        function completeOrder(orderId) {
-            const orderIndex = orders.findIndex(order => order.id === orderId);
-            if (orderIndex !== -1) {
-                orders[orderIndex].status = 'تم الإرسال';
-                localStorage.setItem('romaShopOrders', JSON.stringify(orders));
-                updateAdminOrdersList();
+        // إكمال الطلب
+        async function completeOrder(orderId) {
+            try {
+                await db.collection('orders').doc(orderId).update({
+                    status: 'تم الإرسال'
+                });
+                loadAdminOrders();
                 alert('تم تأكيد إرسال الطلب بنجاح!');
+            } catch (error) {
+                console.error('Error completing order: ', error);
+                alert('حدث خطأ أثناء تأكيد الطلب');
             }
         }
 
         // حذف الطلب
-        function deleteOrder(orderId) {
+        async function deleteOrder(orderId) {
             if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
-                orders = orders.filter(order => order.id !== orderId);
-                localStorage.setItem('romaShopOrders', JSON.stringify(orders));
-                updateAdminOrdersList();
-                alert('تم حذف الطلب بنجاح!');
+                try {
+                    await db.collection('orders').doc(orderId).delete();
+                    loadAdminOrders();
+                    alert('تم حذف الطلب بنجاح!');
+                } catch (error) {
+                    console.error('Error deleting order: ', error);
+                    alert('حدث خطأ أثناء حذف الطلب');
+                }
             }
         }
 
         // تهيئة التطبيق عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            updateOrdersList();
-            
-            // إذا كان الأدمن مسجل الدخول بالفعل، اعرض لوحة التحكم
-            if (isAdminLoggedIn && window.location.hash === '#admin') {
-                showPage('adminPage');
-            }
+            loadOrders();
         });
     </script>
 </body>
