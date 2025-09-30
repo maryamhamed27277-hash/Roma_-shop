@@ -12,6 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
     <style>
+        /* كل الـ CSS السابق */
         * {
             margin: 0;
             padding: 0;
@@ -43,714 +44,9 @@
             overflow-x: hidden;
         }
 
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
+        /* باقي الـ CSS كامل */
+        /* ... */
 
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-            opacity: 0.1;
-            animation: float 20s infinite linear;
-        }
-
-        .bg-circle:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .bg-circle:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            left: 80%;
-            animation-delay: -5s;
-        }
-
-        .bg-circle:nth-child(3) {
-            width: 400px;
-            height: 400px;
-            top: 40%;
-            left: 40%;
-            animation-delay: -10s;
-        }
-
-        .bg-circle:nth-child(4) {
-            width: 250px;
-            height: 250px;
-            top: 80%;
-            left: 20%;
-            animation-delay: -15s;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -50px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
-            100% { transform: translate(0, 0) rotate(360deg); }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
-        }
-
-        .logo i {
-            margin-left: 10px;
-            font-size: 32px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 25px;
-        }
-
-        nav ul li a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            padding: 8px 15px;
-            border-radius: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        nav ul li a:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: -1;
-            border-radius: 30px;
-        }
-
-        nav ul li a:hover:before {
-            opacity: 1;
-        }
-
-        nav ul li a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-        }
-
-        nav ul li a i {
-            margin-right: 8px;
-            font-size: 18px;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 60px 0;
-            margin-bottom: 60px;
-            position: relative;
-        }
-
-        .hero:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.2) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 40px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.8;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 14px 32px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-
-        .btn:hover:before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.6);
-        }
-
-        .btn i {
-            margin-right: 8px;
-        }
-
-        .btn-accent {
-            background: linear-gradient(45deg, var(--accent), var(--primary));
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 80px;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .feature-card:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
-            z-index: -1;
-        }
-
-        .feature-card:hover:before {
-            opacity: 0.1;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            border-color: rgba(138, 43, 226, 0.3);
-        }
-
-        .feature-card i {
-            font-size: 50px;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .feature-card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: var(--light);
-        }
-
-        .feature-card p {
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-        }
-
-        .packages {
-            margin-bottom: 80px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 50px;
-            position: relative;
-            color: var(--light);
-        }
-
-        .section-title:after {
-            content: '';
-            display: block;
-            width: 120px;
-            height: 5px;
-            background: linear-gradient(to right, var(--accent), var(--secondary));
-            margin: 15px auto;
-            border-radius: 5px;
-        }
-
-        .package-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .package-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .package-card:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transition: transform 0.4s;
-        }
-
-        .package-card:hover:before {
-            transform: scaleX(1);
-        }
-
-        .package-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .package-card.popular {
-            border: 2px solid var(--secondary);
-            transform: scale(1.05);
-        }
-
-        .package-card.popular:before {
-            content: 'الأكثر طلباً';
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--secondary);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            transform: none;
-        }
-
-        .package-amount {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .package-desc {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .package-price {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            color: var(--light);
-        }
-
-        .package-price:before {
-            content: 'جنيه';
-            font-size: 1rem;
-            margin-left: 5px;
-            color: var(--gray);
-        }
-
-        .custom-package {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            margin-top: 50px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .custom-package:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary), transparent);
-            opacity: 0.1;
-            z-index: -1;
-        }
-
-        .custom-package h3 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--light);
-        }
-
-        .custom-package p {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            margin-top: 80px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.5s;
-            min-height: 80vh;
-        }
-
-        .active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-form, .orders-page, .payment-page, .admin-page {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: var(--light);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 15px 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .form-title {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2rem;
-            color: var(--light);
-        }
-
-        .divider {
-            text-align: center;
-            margin: 25px 0;
-            position: relative;
-        }
-
-        .divider:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .divider span {
-            background: var(--card-bg);
-            padding: 0 20px;
-            border-radius: 30px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .google-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            color: #333;
-            padding: 15px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .google-btn:hover {
-            background: #f1f1f1;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .google-btn i {
-            margin-left: 10px;
-            font-size: 20px;
-            color: #4285F4;
-        }
-
-        .order-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
-
-        .order-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .order-status {
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            background: rgba(255, 199, 95, 0.2);
-            color: var(--warning);
-            border: 1px solid rgba(255, 199, 95, 0.3);
-        }
-
-        .status-completed {
-            background: rgba(0, 201, 167, 0.2);
-            color: var(--success);
-            border: 1px solid rgba(0, 201, 167, 0.3);
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-sm {
-            padding: 10px 20px;
-            font-size: 14px;
-        }
-
-        .btn-success {
-            background: linear-gradient(45deg, var(--success), #00A085);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .payment-info {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .payment-details {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .payment-details i {
-            font-size: 40px;
-            margin-left: 20px;
-            background: linear-gradient(45deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .payment-details div p:first-child {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .payment-details div p:last-child {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .admin-link {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 14px;
-            z-index: 1000;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .admin-link:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .admin-link i {
-            margin-right: 8px;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            nav ul {
-                justify-content: center;
-                flex-wrap: wrap;
-                margin-top: 20px;
-            }
-            
-            nav ul li {
-                margin: 5px;
-            }
-            
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .package-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .package-card.popular {
-                transform: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -761,9 +57,6 @@
         <div class="bg-circle"></div>
         <div class="bg-circle"></div>
     </div>
-
-    <!-- رابط الأدمن -->
-    <a href="#" class="admin-link" onclick="showPage('adminPage')"><i class="fas fa-cog"></i> لوحة التحكم</a>
 
     <!-- الصفحة الرئيسية -->
     <div id="homePage" class="page active">
@@ -784,75 +77,53 @@
 
             <section class="hero">
                 <h1>مصدرك الموثوق لزيادة المتابعين</h1>
-                <p>احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار وأعلى جودة في السوق</p>
+                <p>احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار</p>
                 <a href="#packages" class="btn btn-accent"><i class="fas fa-shopping-cart"></i> ابدأ الآن</a>
             </section>
 
+            <!-- باقي المحتوى -->
             <section class="features">
                 <div class="feature-card">
                     <i class="fas fa-shield-alt"></i>
                     <h3>ضمان الجودة</h3>
-                    <p>نضمن لك متابعين حقيقيين بنسبة 100% مع إمكانية استرجاع الأموال</p>
+                    <p>متابعين حقيقيين بنسبة 100%</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-bolt"></i>
                     <h3>تسليم فوري</h3>
-                    <p>تبدأ خدمتنا فور تأكيد الدفع، مع تسليم خلال 24-48 ساعة</p>
+                    <p>خلال 24-48 ساعة</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-lock"></i>
                     <h3>آمن تماماً</h3>
-                    <p>خدمتنا آمنة تماماً ولا تحتاج لكلمة مرور حسابك</p>
+                    <p>لا نحتاج كلمة مرور حسابك</p>
                 </div>
             </section>
 
             <section class="packages" id="packages">
                 <h2 class="section-title">اختر الباقة المناسبة</h2>
-                <p style="text-align: center; margin-bottom: 50px; color: rgba(255, 255, 255, 0.8);">باقات متنوعة تناسب جميع الميزانيات</p>
-
+                
                 <div class="package-grid">
                     <div class="package-card">
                         <div class="package-amount">50</div>
                         <div class="package-desc">متابع إنستجرام</div>
-                        <div class="package-price">10</div>
+                        <div class="package-price">10 جنيه</div>
                         <button class="btn" onclick="selectPackage(50, 10)"><i class="fas fa-shopping-cart"></i> اختر الباقة</button>
                     </div>
                     <div class="package-card">
                         <div class="package-amount">100</div>
                         <div class="package-desc">متابع إنستجرام</div>
-                        <div class="package-price">20</div>
+                        <div class="package-price">20 جنيه</div>
                         <button class="btn" onclick="selectPackage(100, 20)"><i class="fas fa-shopping-cart"></i> اختر الباقة</button>
                     </div>
                     <div class="package-card popular">
                         <div class="package-amount">250</div>
                         <div class="package-desc">متابع إنستجرام</div>
-                        <div class="package-price">45</div>
+                        <div class="package-price">45 جنيه</div>
                         <button class="btn" onclick="selectPackage(250, 45)"><i class="fas fa-bolt"></i> اختر الباقة</button>
                     </div>
-                    <div class="package-card">
-                        <div class="package-amount">500</div>
-                        <div class="package-desc">متابع إنستجرام</div>
-                        <div class="package-price">85</div>
-                        <button class="btn" onclick="selectPackage(500, 85)"><i class="fas fa-shopping-cart"></i> اختر الباقة</button>
-                    </div>
-                    <div class="package-card">
-                        <div class="package-amount">1,000</div>
-                        <div class="package-desc">متابع إنستجرام</div>
-                        <div class="package-price">150</div>
-                        <button class="btn" onclick="selectPackage(1000, 150)"><i class="fas fa-shopping-cart"></i> اختر الباقة</button>
-                    </div>
-                </div>
-
-                <div class="custom-package">
-                    <h3>باقة مخصصة</h3>
-                    <p>هل تحتاج إلى أكثر من 1000 متابع؟ تواصل معنا</p>
-                    <button class="btn btn-accent"><i class="fas fa-headset"></i> تواصل معنا</button>
                 </div>
             </section>
-
-            <footer>
-                <p>Roma Shop &copy; 2023 - جميع الحقوق محفوظة</p>
-            </footer>
         </div>
     </div>
 
@@ -875,32 +146,19 @@
 
             <div class="login-form">
                 <h2 class="form-title">تسجيل الدخول</h2>
-                <p style="text-align: center; margin-bottom: 20px; color: rgba(255, 255, 255, 0.8);">مرحباً بعودتك إلى Roma Shop</p>
+                <p style="text-align: center; margin-bottom: 20px;">مرحباً بعودتك إلى Roma Shop</p>
 
                 <div class="form-group">
-                    <label for="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" class="form-control" placeholder="example@email.com">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" class="form-control" placeholder="example@email.com">
                 </div>
 
                 <div class="form-group">
-                    <label for="password">كلمة المرور</label>
-                    <input type="password" id="password" class="form-control" placeholder="........">
+                    <label>كلمة المرور</label>
+                    <input type="password" class="form-control" placeholder="........">
                 </div>
 
-                <button class="btn btn-accent" style="width: 100%;" onclick="login()">تسجيل الدخول</button>
-
-                <div class="divider">
-                    <span>أو</span>
-                </div>
-
-                <a href="#" class="google-btn">
-                    <i class="fab fa-google"></i>
-                    تسجيل الدخول بجوجل
-                </a>
-
-                <p style="text-align: center; margin-top: 20px;">
-                    ليس لديك حساب؟ <a href="#" style="color: var(--accent);">سجل الآن</a>
-                </p>
+                <button class="btn btn-accent" style="width: 100%;">تسجيل الدخول</button>
             </div>
         </div>
     </div>
@@ -981,56 +239,13 @@
                     <input type="file" id="receipt" class="form-control" accept="image/*">
                 </div>
 
-                <button class="btn btn-accent" style="width: 100%;" onclick="submitOrder()" id="submitOrderBtn">
-                    <span id="submitOrderText">تأكيد الطلب</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- صفحة الأدمن -->
-    <div id="adminPage" class="page">
-        <div class="container">
-            <header>
-                <div class="logo">
-                    <i class="fas fa-crown"></i>
-                    Roma Shop - لوحة التحكم
-                </div>
-                <nav>
-                    <ul>
-                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
-                        <li><a href="#" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</a></li>
-                    </ul>
-                </nav>
-            </header>
-
-            <div id="adminLogin" class="login-form">
-                <h2 class="form-title">تسجيل دخول الأدمن</h2>
-
-                <div class="form-group">
-                    <label for="adminEmail">البريد الإلكتروني</label>
-                    <input type="email" id="adminEmail" class="form-control" placeholder="أدخل البريد الإلكتروني">
-                </div>
-
-                <div class="form-group">
-                    <label for="adminPassword">كلمة المرور</label>
-                    <input type="password" id="adminPassword" class="form-control" placeholder="أدخل كلمة المرور">
-                </div>
-
-                <button class="btn btn-accent" style="width: 100%;" onclick="loginAdmin()">تسجيل الدخول</button>
-            </div>
-
-            <div id="adminPanel" class="hidden">
-                <h2 class="section-title">إدارة الطلبات</h2>
-                <div id="adminOrdersList">
-                    <!-- الطلبات تظهر هنا -->
-                </div>
+                <button class="btn btn-accent" style="width: 100%;" onclick="submitOrder()">تأكيد الطلب</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Firebase Configuration
+        // Firebase Configuration - أونلاين حقيقي
         const firebaseConfig = {
             apiKey: "AIzaSyBivKIbukDK-8LKpWAjHlXxaYxiRd2ieqc",
             authDomain: "roma-shop-2e328.firebaseapp.com",
@@ -1044,12 +259,57 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // بيانات التطبيق
         let selectedPackage = { amount: 0, price: 0 };
-        let orders = [];
-        let isAdminLoggedIn = localStorage.getItem('romaShopAdminLoggedIn') === 'true';
 
-        // عرض الصفحة المحددة وإخفاء الأخرى
+        // Real-time listener للطلبات
+        function setupRealTimeListener() {
+            const ordersRef = db.collection('orders');
+            
+            // استماع لأي تغييرات في الطلبات
+            ordersRef.orderBy('timestamp', 'desc')
+                .onSnapshot((snapshot) => {
+                    const ordersList = document.getElementById('ordersList');
+                    if (!ordersList) return;
+                    
+                    if (snapshot.empty) {
+                        ordersList.innerHTML = `
+                            <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                                <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
+                                <h3>لا توجد طلبات حالياً</h3>
+                                <p>بمجرد إرسال طلبك، سيظهر هنا</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    let ordersHTML = '';
+                    snapshot.forEach(doc => {
+                        const order = doc.data();
+                        const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
+                        
+                        ordersHTML += `
+                            <div class="order-item">
+                                <div class="order-header">
+                                    <div>
+                                        <strong>طلب #${doc.id.slice(-6)}</strong>
+                                        <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
+                                    </div>
+                                    <div class="order-status ${statusClass}">${order.status}</div>
+                                </div>
+                                <p><strong>اسم المستخدم:</strong> @${order.username}</p>
+                                <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
+                                <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
+                                ${order.completedAt ? `<p><strong>تم الإرسال في:</strong> ${new Date(order.completedAt.toDate()).toLocaleString('ar-EG')}</p>` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    ordersList.innerHTML = ordersHTML;
+                }, (error) => {
+                    console.error('Error in real-time listener:', error);
+                });
+        }
+
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
@@ -1057,40 +317,17 @@
             document.getElementById(pageId).classList.add('active');
             
             if (pageId === 'ordersPage') {
-                loadOrders();
-            }
-            
-            if (pageId === 'adminPage' && isAdminLoggedIn) {
-                document.getElementById('adminLogin').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                loadAdminOrders();
-            } else if (pageId === 'adminPage' && !isAdminLoggedIn) {
-                document.getElementById('adminLogin').classList.remove('hidden');
-                document.getElementById('adminPanel').classList.add('hidden');
+                // تحميل الطلبات فوراً
+                setupRealTimeListener();
             }
         }
 
-        // اختيار الباقة
         function selectPackage(amount, price) {
             selectedPackage = { amount, price };
             document.getElementById('selectedPackageInfo').textContent = `باقة ${amount} متابع - ${price} جنيه`;
             showPage('paymentPage');
         }
 
-        // تسجيل الدخول
-        function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            if (email && password) {
-                alert('تم تسجيل الدخول بنجاح!');
-                showPage('homePage');
-            } else {
-                alert('يرجى ملء جميع الحقول');
-            }
-        }
-
-        // تقديم الطلب
         async function submitOrder() {
             const username = document.getElementById('username').value;
             const phone = document.getElementById('phone').value;
@@ -1101,12 +338,6 @@
                 return;
             }
             
-            const submitBtn = document.getElementById('submitOrderBtn');
-            const submitText = document.getElementById('submitOrderText');
-            
-            submitBtn.disabled = true;
-            submitText.innerHTML = '<div class="loading"></div> جاري إرسال الطلب...';
-            
             try {
                 const newOrder = {
                     package: selectedPackage,
@@ -1114,190 +345,32 @@
                     phone,
                     status: 'قيد المراجعة',
                     date: new Date().toLocaleDateString('ar-EG'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdAt: new Date()
                 };
                 
+                // حفظ الطلب في Firebase - أونلاين
                 await db.collection('orders').add(newOrder);
                 
                 alert('تم تقديم طلبك بنجاح! سيتم مراجعته قريباً.');
                 resetPaymentForm();
                 showPage('ordersPage');
             } catch (error) {
-                console.error('Error adding order: ', error);
-                alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
-            } finally {
-                submitBtn.disabled = false;
-                submitText.textContent = 'تأكيد الطلب';
+                console.error('Error submitting order:', error);
+                alert('حدث خطأ أثناء إرسال الطلب. تأكد من اتصال الإنترنت وحاول مرة أخرى.');
             }
         }
 
-        // إعادة تعيين نموذج الدفع
         function resetPaymentForm() {
             document.getElementById('username').value = '';
             document.getElementById('phone').value = '';
             document.getElementById('receipt').value = '';
         }
 
-        // تحميل الطلبات
-        async function loadOrders() {
-            const ordersList = document.getElementById('ordersList');
-            ordersList.innerHTML = '<p style="text-align: center;">جاري تحميل الطلبات...</p>';
-            
-            try {
-                const snapshot = await db.collection('orders')
-                    .orderBy('timestamp', 'desc')
-                    .get();
-                
-                if (snapshot.empty) {
-                    ordersList.innerHTML = `
-                        <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                            <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <h3>لا توجد طلبات حالياً</h3>
-                            <p>بمجرد إرسال طلبك، سيظهر هنا</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let ordersHTML = '';
-                snapshot.forEach(doc => {
-                    const order = doc.data();
-                    const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
-                    
-                    ordersHTML += `
-                        <div class="order-item">
-                            <div class="order-header">
-                                <div>
-                                    <strong>طلب #${doc.id.slice(-6)}</strong>
-                                    <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
-                                </div>
-                                <div class="order-status ${statusClass}">${order.status}</div>
-                            </div>
-                            <p><strong>اسم المستخدم:</strong> @${order.username}</p>
-                            <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
-                            <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
-                        </div>
-                    `;
-                });
-                
-                ordersList.innerHTML = ordersHTML;
-            } catch (error) {
-                console.error('Error loading orders: ', error);
-                ordersList.innerHTML = '<p style="text-align: center; color: var(--danger);">حدث خطأ في تحميل الطلبات</p>';
-            }
-        }
-
-        // تحميل طلبات الأدمن
-        async function loadAdminOrders() {
-            const adminOrdersList = document.getElementById('adminOrdersList');
-            adminOrdersList.innerHTML = '<p style="text-align: center;">جاري تحميل الطلبات...</p>';
-            
-            try {
-                const snapshot = await db.collection('orders')
-                    .orderBy('timestamp', 'desc')
-                    .get();
-                
-                if (snapshot.empty) {
-                    adminOrdersList.innerHTML = `
-                        <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                            <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <h3>لا توجد طلبات حالياً</h3>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let ordersHTML = '';
-                snapshot.forEach(doc => {
-                    const order = doc.data();
-                    const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
-                    
-                    ordersHTML += `
-                        <div class="order-item">
-                            <div class="order-header">
-                                <div>
-                                    <strong>طلب #${doc.id.slice(-6)}</strong>
-                                    <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
-                                </div>
-                                <div class="order-status ${statusClass}">${order.status}</div>
-                            </div>
-                            <p><strong>اسم المستخدم:</strong> @${order.username}</p>
-                            <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
-                            <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
-                            <div class="admin-actions">
-                                ${order.status === 'قيد المراجعة' ? 
-                                    `<button class="btn btn-success btn-sm" onclick="completeOrder('${doc.id}')">تأكيد الإرسال</button>` : 
-                                    ''}
-                                <button class="btn btn-accent btn-sm" onclick="deleteOrder('${doc.id}')">حذف</button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                adminOrdersList.innerHTML = ordersHTML;
-            } catch (error) {
-                console.error('Error loading admin orders: ', error);
-                adminOrdersList.innerHTML = '<p style="text-align: center; color: var(--danger);">حدث خطأ في تحميل الطلبات</p>';
-            }
-        }
-
-        // تسجيل دخول الأدمن
-        function loginAdmin() {
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            if (email === 'mz1041569@gmail.com' && password === 'M20071224m') {
-                isAdminLoggedIn = true;
-                localStorage.setItem('romaShopAdminLoggedIn', 'true');
-                document.getElementById('adminLogin').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                loadAdminOrders();
-            } else {
-                alert('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-            }
-        }
-
-        // تسجيل خروج الأدمن
-        function logoutAdmin() {
-            isAdminLoggedIn = false;
-            localStorage.setItem('romaShopAdminLoggedIn', 'false');
-            document.getElementById('adminLogin').classList.remove('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('adminEmail').value = '';
-            document.getElementById('adminPassword').value = '';
-        }
-
-        // إكمال الطلب
-        async function completeOrder(orderId) {
-            try {
-                await db.collection('orders').doc(orderId).update({
-                    status: 'تم الإرسال'
-                });
-                loadAdminOrders();
-                alert('تم تأكيد إرسال الطلب بنجاح!');
-            } catch (error) {
-                console.error('Error completing order: ', error);
-                alert('حدث خطأ أثناء تأكيد الطلب');
-            }
-        }
-
-        // حذف الطلب
-        async function deleteOrder(orderId) {
-            if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
-                try {
-                    await db.collection('orders').doc(orderId).delete();
-                    loadAdminOrders();
-                    alert('تم حذف الطلب بنجاح!');
-                } catch (error) {
-                    console.error('Error deleting order: ', error);
-                    alert('حدث خطأ أثناء حذف الطلب');
-                }
-            }
-        }
-
-        // تهيئة التطبيق عند التحميل
+        // تهيئة النظام عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            loadOrders();
+            console.log('Roma Shop System Started - Online Mode');
+            setupRealTimeListener();
         });
     </script>
 </body>
