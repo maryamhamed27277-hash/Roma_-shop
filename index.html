@@ -1,207 +1,948 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Roma Shop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roma Shop - متابعات إنستجرام</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff4d94;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
 
-  <style>
-    body { margin:0; font-family:'Cairo',sans-serif; background:#f3f4f6; }
-    header {
-      background: linear-gradient(to right,#6a11cb,#2575fc);
-      padding:15px; color:#fff; text-align:center; font-size:20px;
-    }
-    .container { padding:20px; max-width:1100px; margin:auto; }
-    h2 { text-align:center; margin:15px 0; }
-    .grid {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-      gap:20px; margin-top:20px;
-    }
-    .card {
-      background:#fff; border-radius:14px; padding:20px; text-align:center;
-      box-shadow:0 4px 10px rgba(0,0,0,0.1); transition:0.3s;
-    }
-    .card:hover { transform:translateY(-5px); }
-    .card h3 { color:#6a11cb; }
-    .card button {
-      background:linear-gradient(to right,#6a11cb,#2575fc);
-      color:#fff;border:none;padding:10px 20px;margin-top:10px;
-      border-radius:8px;cursor:pointer;font-weight:bold;
-    }
-    .modal {
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;
-    }
-    .modal-content {
-      background:#fff;padding:20px;border-radius:14px;max-width:400px;width:90%;
-      text-align:center;
-    }
-    .modal input, .modal button { width:90%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #ccc; }
-    .modal button { background:#6a11cb;color:#fff;border:none; }
-    /* لوحة التحكم */
-    #adminSection { display:none; }
-    table { width:100%; border-collapse:collapse; margin-top:20px; }
-    table,th,td { border:1px solid #ccc; }
-    th,td { padding:10px; text-align:center; }
-    .status-btn {
-      padding:6px 12px;border:none;border-radius:6px;cursor:pointer;
-      background:#2575fc;color:#fff;
-    }
-  </style>
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-left: 10px;
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+
+        nav ul li a i {
+            margin-right: 5px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .packages {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .package-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-card:hover {
+            transform: scale(1.05);
+        }
+
+        .package-card.popular {
+            border: 2px solid var(--accent);
+            transform: scale(1.05);
+        }
+
+        .package-card.popular:before {
+            content: 'الأكثر طلباً';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .package-amount {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .package-desc {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .package-price {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-accent {
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+        }
+
+        .custom-package {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* صفحات إضافية */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .login-form, .orders-page, .payment-page, .admin-page {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .divider span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0 15px;
+            border-radius: 20px;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #333;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .google-btn:hover {
+            background: #f1f1f1;
+            transform: translateY(-2px);
+        }
+
+        .google-btn i {
+            margin-left: 10px;
+            font-size: 18px;
+            color: #4285F4;
+        }
+
+        .order-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .payment-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .payment-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .payment-details i {
+            font-size: 30px;
+            margin-left: 15px;
+            color: var(--accent);
+        }
+
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .package-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>Roma Shop</header>
+    <!-- رابط الدخول إلى صفحة الأدمن (مخفي) -->
+    <a href="#" class="admin-link" id="adminLink" onclick="showPage('adminPage')"><i class="fas fa-cog"></i> الأدمن</a>
 
-  <!-- تسجيل دخول الأدمن -->
-  <div class="container" id="loginSection">
-    <h2>تسجيل دخول الأدمن</h2>
-    <input type="email" id="adminEmail" placeholder="البريد">
-    <input type="password" id="adminPass" placeholder="كلمة المرور">
-    <button onclick="adminLogin()">دخول</button>
-  </div>
+    <!-- الصفحة الرئيسية -->
+    <div id="homePage" class="page active">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    Roma Shop
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                    </ul>
+                </nav>
+            </header>
 
-  <!-- المتجر -->
-  <div class="container" id="shopSection">
-    <h2>اختر الباقة المناسبة</h2>
-    <div class="grid" id="packages"></div>
-  </div>
+            <section class="hero">
+                <h1>مصدر الموثوق لزيادة المتابعين</h1>
+                <p>احصل على متابعين حقيقيين لحسابات إنستجرام بأفضل الأسعار</p>
+                <a href="#packages" class="btn btn-accent">اطلب الآن</a>
+            </section>
 
-  <!-- نافذة الطلب -->
-  <div class="modal" id="orderModal">
-    <div class="modal-content">
-      <h3>إكمال الطلب</h3>
-      <p>ادفع على: <b>01031090116</b></p>
-      <input type="text" id="instaUser" placeholder="اسم مستخدم إنستجرام">
-      <input type="text" id="phone" placeholder="رقم الموبايل">
-      <input type="file" id="receipt">
-      <button onclick="submitOrder()">إرسال الطلب</button>
-      <button onclick="closeModal()">إغلاق</button>
+            <section class="features">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>ضمان الجودة</h3>
+                    <p>ضمان استرجاع المال</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>تسليم سريع</h3>
+                    <p>خلال 24-48 ساعة</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-lock"></i>
+                    <h3>آمن 100%</h3>
+                    <p>حسابات حقيقية ونشطة</p>
+                </div>
+            </section>
+
+            <section class="packages" id="packages">
+                <h2 class="section-title">اختر الباقة المناسبة</h2>
+                <p style="text-align: center; margin-bottom: 30px; color: rgba(255, 255, 255, 0.8);">باقات متنوعة تناسب جميع الاحتياجات</p>
+
+                <div class="package-grid">
+                    <div class="package-card">
+                        <div class="package-amount">50</div>
+                        <div class="package-desc">متابع إنستجرام</div>
+                        <div class="package-price">10 جنيه</div>
+                        <button class="btn" onclick="selectPackage(50, 10)">اختر الباقة</button>
+                    </div>
+                    <div class="package-card">
+                        <div class="package-amount">100</div>
+                        <div class="package-desc">متابع إنستجرام</div>
+                        <div class="package-price">20 جنيه</div>
+                        <button class="btn" onclick="selectPackage(100, 20)">اختر الباقة</button>
+                    </div>
+                    <div class="package-card popular">
+                        <div class="package-amount">250</div>
+                        <div class="package-desc">متابع إنستجرام</div>
+                        <div class="package-price">45 جنيه</div>
+                        <button class="btn" onclick="selectPackage(250, 45)">اختر الباقة</button>
+                    </div>
+                    <div class="package-card">
+                        <div class="package-amount">500</div>
+                        <div class="package-desc">متابع إنستجرام</div>
+                        <div class="package-price">85 جنيه</div>
+                        <button class="btn" onclick="selectPackage(500, 85)">اختر الباقة</button>
+                    </div>
+                    <div class="package-card">
+                        <div class="package-amount">1,000</div>
+                        <div class="package-desc">متابع إنستجرام</div>
+                        <div class="package-price">150 جنيه</div>
+                        <button class="btn" onclick="selectPackage(1000, 150)">اختر الباقة</button>
+                    </div>
+                </div>
+
+                <div class="custom-package">
+                    <h3>باقة مخصصة</h3>
+                    <p>أكثر من 1000 متابع - تواصل معنا</p>
+                    <button class="btn btn-accent">تواصل معنا</button>
+                </div>
+            </section>
+
+            <footer>
+                <p>Roma Shop &copy; 2023 - جميع الحقوق محفوظة</p>
+            </footer>
+        </div>
     </div>
-  </div>
 
-  <!-- لوحة التحكم -->
-  <div class="container" id="adminSection">
-    <h2>لوحة تحكم الأدمن</h2>
-    <table>
-      <thead>
-        <tr><th>المستخدم</th><th>الباقة</th><th>الهاتف</th><th>الإيصال</th><th>الحالة</th><th>تحكم</th></tr>
-      </thead>
-      <tbody id="ordersTable"></tbody>
-    </table>
-    <button onclick="logout()">تسجيل خروج</button>
-  </div>
+    <!-- صفحة تسجيل الدخول -->
+    <div id="loginPage" class="page">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    Roma Shop
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                    </ul>
+                </nav>
+            </header>
 
-<script>
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyCg7c0q2nKJHykS2Qpp0ldoutG_29OBYkU",
-    authDomain: "romashop-62bf8.firebaseapp.com",
-    projectId: "romashop-62bf8",
-    storageBucket: "romashop-62bf8.appspot.com",
-    messagingSenderId: "830956550573",
-    appId: "1:830956550573:web:8f40bedb6d05c87eecc924"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const storage = firebase.storage();
-  const auth = firebase.auth();
+            <div class="login-form">
+                <h2 class="form-title">تسجيل الدخول</h2>
+                <p style="text-align: center; margin-bottom: 20px; color: rgba(255, 255, 255, 0.8);">مرحباً بعودتك إلى Roma Shop</p>
 
-  // المتجر
-  const packages = [
-    {followers:50, price:10},
-    {followers:100, price:20},
-    {followers:250, price:45},
-    {followers:500, price:85},
-    {followers:1000, price:150}
-  ];
-  let selectedPackage=null;
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" class="form-control" placeholder="example@email.com">
+                </div>
 
-  function renderPackages(){
-    const div=document.getElementById("packages"); div.innerHTML="";
-    packages.forEach(p=>{
-      const card=document.createElement("div");
-      card.className="card";
-      card.innerHTML=`<h3>${p.followers} متابع</h3>
-        <p>${p.price} جنيه</p>
-        <button>اختر الباقة</button>`;
-      card.querySelector("button").onclick=()=>{
-        selectedPackage=p;
-        document.getElementById("orderModal").style.display="flex";
-      };
-      div.appendChild(card);
-    });
-  }
-  renderPackages();
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" class="form-control" placeholder="........">
+                </div>
 
-  function closeModal(){document.getElementById("orderModal").style.display="none";}
+                <button class="btn btn-accent" style="width: 100%;" onclick="login()">تسجيل الدخول</button>
 
-  async function submitOrder(){
-    const insta=document.getElementById("instaUser").value;
-    const phone=document.getElementById("phone").value;
-    const file=document.getElementById("receipt").files[0];
-    if(!insta||!phone||!file){alert("املأ جميع البيانات");return;}
-    const ref=storage.ref("receipts/"+Date.now()+"_"+file.name);
-    await ref.put(file);
-    const url=await ref.getDownloadURL();
-    await db.collection("orders").add({
-      package:selectedPackage,
-      instaUser:insta, phone, receipt:url,
-      status:"قيد المراجعة", createdAt:new Date()
-    });
-    alert("✅ تم إرسال الطلب بنجاح");
-    closeModal();
-  }
+                <div class="divider">
+                    <span>أو</span>
+                </div>
 
-  // تسجيل دخول الأدمن
-  function adminLogin(){
-    const email=document.getElementById("adminEmail").value;
-    const pass=document.getElementById("adminPass").value;
-    auth.signInWithEmailAndPassword(email,pass)
-    .then(()=>{
-      if(email==="admin@romashop.com"){ 
-        document.getElementById("loginSection").style.display="none";
-        document.getElementById("shopSection").style.display="none";
-        document.getElementById("adminSection").style.display="block";
-        loadOrders();
-      } else { alert("ليس لديك صلاحية الأدمن"); }
-    }).catch(e=>alert("خطأ: "+e.message));
-  }
+                <a href="#" class="google-btn">
+                    <i class="fab fa-google"></i>
+                    تسجيل الدخول بجوجل
+                </a>
 
-  function logout(){
-    auth.signOut();
-    document.getElementById("adminSection").style.display="none";
-    document.getElementById("loginSection").style.display="block";
-    document.getElementById("shopSection").style.display="block";
-  }
+                <p style="text-align: center; margin-top: 20px;">
+                    ليس لديك حساب؟ <a href="#" style="color: var(--accent);">سجل الآن</a>
+                </p>
+            </div>
+        </div>
+    </div>
 
-  function loadOrders(){
-    db.collection("orders").orderBy("createdAt","desc").onSnapshot(snap=>{
-      const tbody=document.getElementById("ordersTable");
-      tbody.innerHTML="";
-      snap.forEach(doc=>{
-        const d=doc.data();
-        const tr=document.createElement("tr");
-        tr.innerHTML=`
-          <td>${d.instaUser}</td>
-          <td>${d.package.followers} متابع - ${d.package.price}ج</td>
-          <td>${d.phone}</td>
-          <td><a href="${d.receipt}" target="_blank">عرض</a></td>
-          <td>${d.status}</td>
-          <td><button class="status-btn" onclick="updateStatus('${doc.id}')">اكتمال</button></td>`;
-        tbody.appendChild(tr);
-      });
-    });
-  }
+    <!-- صفحة الطلبات -->
+    <div id="ordersPage" class="page">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    Roma Shop
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                    </ul>
+                </nav>
+            </header>
 
-  function updateStatus(id){
-    db.collection("orders").doc(id).update({status:"مكتمل"});
-  }
-</script>
+            <h2 class="section-title">طلباتي</h2>
+            <div id="ordersList">
+                <!-- سيتم ملء الطلبات هنا بواسطة الجافاسكريبت -->
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة الدفع -->
+    <div id="paymentPage" class="page">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    Roma Shop
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                    </ul>
+                </nav>
+            </header>
+
+            <div class="payment-page">
+                <h2 class="form-title">إتمام الطلب</h2>
+
+                <div class="payment-info">
+                    <h3>بيانات الباقة المختارة</h3>
+                    <p id="selectedPackageInfo">باقة 100 متابع - 20 جنيه</p>
+                </div>
+
+                <div class="payment-info">
+                    <h3>طريقة الدفع</h3>
+                    <div class="payment-details">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div>
+                            <p>الدفع عبر فودافون كاش</p>
+                            <p style="font-weight: bold; font-size: 18px;">01031090116</p>
+                        </div>
+                    </div>
+                    <p>يرجى إرسال المبلغ إلى الرقم أعلاه ثم إرفاق صورة إيصال الدفع</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">اسم المستخدم في إنستجرام</label>
+                    <input type="text" id="username" class="form-control" placeholder="اسم المستخدم بدون @">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="رقم الهاتف للتواصل">
+                </div>
+
+                <div class="form-group">
+                    <label for="receipt">صورة إيصال الدفع</label>
+                    <input type="file" id="receipt" class="form-control" accept="image/*">
+                </div>
+
+                <button class="btn btn-accent" style="width: 100%;" onclick="submitOrder()">تأكيد الطلب</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة الأدمن -->
+    <div id="adminPage" class="page">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    Roma Shop - لوحة التحكم
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
+                        <li><a href="#" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</a></li>
+                    </ul>
+                </nav>
+            </header>
+
+            <div id="adminLogin" class="login-form">
+                <h2 class="form-title">تسجيل دخول الأدمن</h2>
+
+                <div class="form-group">
+                    <label for="adminEmail">البريد الإلكتروني</label>
+                    <input type="email" id="adminEmail" class="form-control" placeholder="أدخل البريد الإلكتروني">
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword">كلمة المرور</label>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="أدخل كلمة المرور">
+                </div>
+
+                <button class="btn btn-accent" style="width: 100%;" onclick="loginAdmin()">تسجيل الدخول</button>
+            </div>
+
+            <div id="adminPanel" class="hidden">
+                <h2 class="section-title">إدارة الطلبات</h2>
+                <div id="adminOrdersList">
+                    <!-- سيتم ملء الطلبات هنا بواسطة الجافاسكريبت -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات التطبيق
+        let selectedPackage = { amount: 0, price: 0 };
+        let orders = JSON.parse(localStorage.getItem('romaShopOrders')) || [];
+        let isAdminLoggedIn = localStorage.getItem('romaShopAdminLoggedIn') === 'true';
+
+        // عرض الصفحة المحددة وإخفاء الأخرى
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            // إذا كانت صفحة الطلبات، قم بتحديث القائمة
+            if (pageId === 'ordersPage') {
+                updateOrdersList();
+            }
+            
+            // إذا كانت صفحة الأدمن وكان مسجل الدخول، اعرض لوحة التحكم
+            if (pageId === 'adminPage' && isAdminLoggedIn) {
+                document.getElementById('adminLogin').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                updateAdminOrdersList();
+            } else if (pageId === 'adminPage' && !isAdminLoggedIn) {
+                document.getElementById('adminLogin').classList.remove('hidden');
+                document.getElementById('adminPanel').classList.add('hidden');
+            }
+        }
+
+        // اختيار الباقة
+        function selectPackage(amount, price) {
+            selectedPackage = { amount, price };
+            document.getElementById('selectedPackageInfo').textContent = `باقة ${amount} متابع - ${price} جنيه`;
+            showPage('paymentPage');
+        }
+
+        // تسجيل الدخول
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email && password) {
+                alert('تم تسجيل الدخول بنجاح!');
+                showPage('homePage');
+            } else {
+                alert('يرجى ملء جميع الحقول');
+            }
+        }
+
+        // تقديم الطلب
+        function submitOrder() {
+            const username = document.getElementById('username').value;
+            const phone = document.getElementById('phone').value;
+            const receipt = document.getElementById('receipt').files[0];
+            
+            if (!username || !phone || !receipt) {
+                alert('يرجى ملء جميع الحقول وإرفاق صورة الإيصال');
+                return;
+            }
+            
+            const newOrder = {
+                id: Date.now(),
+                package: selectedPackage,
+                username,
+                phone,
+                status: 'قيد المراجعة',
+                date: new Date().toLocaleDateString('ar-EG')
+            };
+            
+            orders.push(newOrder);
+            localStorage.setItem('romaShopOrders', JSON.stringify(orders));
+            
+            alert('تم تقديم طلبك بنجاح! سيتم مراجعته قريباً.');
+            resetPaymentForm();
+            showPage('ordersPage');
+        }
+
+        // إعادة تعيين نموذج الدفع
+        function resetPaymentForm() {
+            document.getElementById('username').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('receipt').value = '';
+        }
+
+        // تحديث قائمة الطلبات
+        function updateOrdersList() {
+            const ordersList = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                        <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>لا توجد طلبات حالياً</h3>
+                        <p>بمجرد إرسال طلبك، سيظهر هنا</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let ordersHTML = '';
+            orders.forEach(order => {
+                const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
+                
+                ordersHTML += `
+                    <div class="order-item">
+                        <div class="order-header">
+                            <div>
+                                <strong>طلب #${order.id}</strong>
+                                <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
+                            </div>
+                            <div class="order-status ${statusClass}">${order.status}</div>
+                        </div>
+                        <p><strong>اسم المستخدم:</strong> @${order.username}</p>
+                        <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
+                        <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
+                    </div>
+                `;
+            });
+            
+            ordersList.innerHTML = ordersHTML;
+        }
+
+        // تسجيل دخول الأدمن
+        function loginAdmin() {
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (email === 'mz1041569@gmail.com' && password === 'M20071224m') {
+                isAdminLoggedIn = true;
+                localStorage.setItem('romaShopAdminLoggedIn', 'true');
+                document.getElementById('adminLogin').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                updateAdminOrdersList();
+            } else {
+                alert('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+            }
+        }
+
+        // تسجيل خروج الأدمن
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            localStorage.setItem('romaShopAdminLoggedIn', 'false');
+            document.getElementById('adminLogin').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('adminEmail').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        // تحديث قائمة طلبات الأدمن
+        function updateAdminOrdersList() {
+            const adminOrdersList = document.getElementById('adminOrdersList');
+            
+            if (orders.length === 0) {
+                adminOrdersList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                        <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>لا توجد طلبات حالياً</h3>
+                    </div>
+                `;
+                return;
+            }
+            
+            let ordersHTML = '';
+            orders.forEach(order => {
+                const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
+                
+                ordersHTML += `
+                    <div class="order-item">
+                        <div class="order-header">
+                            <div>
+                                <strong>طلب #${order.id}</strong>
+                                <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
+                            </div>
+                            <div class="order-status ${statusClass}">${order.status}</div>
+                        </div>
+                        <p><strong>اسم المستخدم:</strong> @${order.username}</p>
+                        <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
+                        <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
+                        <div class="admin-actions">
+                            ${order.status === 'قيد المراجعة' ? 
+                                `<button class="btn btn-success btn-sm" onclick="completeOrder(${order.id})">تأكيد الإرسال</button>` : 
+                                ''}
+                            <button class="btn btn-accent btn-sm" onclick="deleteOrder(${order.id})">حذف</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            adminOrdersList.innerHTML = ordersHTML;
+        }
+
+        // إكمال الطلب (تغيير الحالة إلى تم الإرسال)
+        function completeOrder(orderId) {
+            const orderIndex = orders.findIndex(order => order.id === orderId);
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = 'تم الإرسال';
+                localStorage.setItem('romaShopOrders', JSON.stringify(orders));
+                updateAdminOrdersList();
+                alert('تم تأكيد إرسال الطلب بنجاح!');
+            }
+        }
+
+        // حذف الطلب
+        function deleteOrder(orderId) {
+            if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
+                orders = orders.filter(order => order.id !== orderId);
+                localStorage.setItem('romaShopOrders', JSON.stringify(orders));
+                updateAdminOrdersList();
+                alert('تم حذف الطلب بنجاح!');
+            }
+        }
+
+        // تهيئة التطبيق عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOrdersList();
+            
+            // إذا كان الأدمن مسجل الدخول بالفعل، اعرض لوحة التحكم
+            if (isAdminLoggedIn && window.location.hash === '#admin') {
+                showPage('adminPage');
+            }
+        });
+    </script>
 </body>
 </html>
