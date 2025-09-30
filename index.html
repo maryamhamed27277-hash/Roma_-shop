@@ -7,12 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
     <style>
-        /* كل الـ CSS السابق */
         * {
             margin: 0;
             padding: 0;
@@ -31,72 +26,261 @@
             --success: #00C9A7;
             --warning: #FFC75F;
             --danger: #FF8066;
-            --gray: #8B8B9E;
-            --card-bg: rgba(255, 255, 255, 0.08);
-            --card-border: rgba(255, 255, 255, 0.12);
         }
 
         body {
-            background: linear-gradient(135deg, var(--dark) 0%, #16213E 50%, #0F3460 100%);
+            background: linear-gradient(135deg, var(--dark) 0%, #16213E 100%);
             color: var(--light);
             min-height: 100vh;
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
-        /* باقي الـ CSS كامل */
-        /* ... */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background: var(--primary);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 80px 0;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.08);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .packages {
+            margin: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .package-card {
+            background: rgba(255,255,255,0.08);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            transition: 0.4s;
+        }
+
+        .package-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .package-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .package-price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .login-form, .payment-page {
+            background: rgba(255,255,255,0.08);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 50px auto;
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .order-item {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .status-pending {
+            background: rgba(255, 199, 95, 0.2);
+            color: var(--warning);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .status-completed {
+            background: rgba(0, 201, 167, 0.2);
+            color: var(--success);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-    <!-- تأثيرات الخلفية -->
-    <div class="bg-animation">
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-    </div>
-
-    <!-- الصفحة الرئيسية -->
-    <div id="homePage" class="page active">
-        <div class="container">
+    <div class="container">
+        <!-- الصفحة الرئيسية -->
+        <div id="homePage" class="page active">
             <header>
                 <div class="logo">
-                    <i class="fas fa-crown"></i>
-                    Roma Shop
+                    <i class="fas fa-crown"></i> Roma Shop
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
-                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
-                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                        <li><a href="#" onclick="showPage('homePage')">الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')">طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')">تسجيل الدخول</a></li>
                     </ul>
                 </nav>
             </header>
 
             <section class="hero">
                 <h1>مصدرك الموثوق لزيادة المتابعين</h1>
-                <p>احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار</p>
-                <a href="#packages" class="btn btn-accent"><i class="fas fa-shopping-cart"></i> ابدأ الآن</a>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9;">
+                    احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار
+                </p>
+                <a href="#packages" class="btn">
+                    <i class="fas fa-shopping-cart"></i> ابدأ الآن
+                </a>
             </section>
 
-            <!-- باقي المحتوى -->
             <section class="features">
                 <div class="feature-card">
                     <i class="fas fa-shield-alt"></i>
                     <h3>ضمان الجودة</h3>
-                    <p>متابعين حقيقيين بنسبة 100%</p>
+                    <p>متابعين حقيقيين بنسبة 100% مع ضمان استرجاع الأموال</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-bolt"></i>
                     <h3>تسليم فوري</h3>
-                    <p>خلال 24-48 ساعة</p>
+                    <p>تبدأ خدمتنا فور تأكيد الدفع، خلال 24-48 ساعة</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-lock"></i>
                     <h3>آمن تماماً</h3>
-                    <p>لا نحتاج كلمة مرور حسابك</p>
+                    <p>خدمتنا آمنة ولا تحتاج لكلمة مرور حسابك</p>
                 </div>
             </section>
 
@@ -106,76 +290,94 @@
                 <div class="package-grid">
                     <div class="package-card">
                         <div class="package-amount">50</div>
-                        <div class="package-desc">متابع إنستجرام</div>
+                        <div style="font-size: 1.1rem; margin-bottom: 15px; opacity: 0.8;">متابع إنستجرام</div>
                         <div class="package-price">10 جنيه</div>
-                        <button class="btn" onclick="selectPackage(50, 10)"><i class="fas fa-shopping-cart"></i> اختر الباقة</button>
+                        <button class="btn" onclick="selectPackage(50, 10)">
+                            <i class="fas fa-shopping-cart"></i> اختر الباقة
+                        </button>
                     </div>
+                    
                     <div class="package-card">
                         <div class="package-amount">100</div>
-                        <div class="package-desc">متابع إنستجرام</div>
+                        <div style="font-size: 1.1rem; margin-bottom: 15px; opacity: 0.8;">متابع إنستجرام</div>
                         <div class="package-price">20 جنيه</div>
-                        <button class="btn" onclick="selectPackage(100, 20)"><i class="fas fa-shopping-cart"></i> اختر الباقة</button>
+                        <button class="btn" onclick="selectPackage(100, 20)">
+                            <i class="fas fa-shopping-cart"></i> اختر الباقة
+                        </button>
                     </div>
-                    <div class="package-card popular">
+                    
+                    <div class="package-card">
                         <div class="package-amount">250</div>
-                        <div class="package-desc">متابع إنستجرام</div>
+                        <div style="font-size: 1.1rem; margin-bottom: 15px; opacity: 0.8;">متابع إنستجرام</div>
                         <div class="package-price">45 جنيه</div>
-                        <button class="btn" onclick="selectPackage(250, 45)"><i class="fas fa-bolt"></i> اختر الباقة</button>
+                        <button class="btn" onclick="selectPackage(250, 45)">
+                            <i class="fas fa-bolt"></i> اختر الباقة
+                        </button>
+                    </div>
+
+                    <div class="package-card">
+                        <div class="package-amount">500</div>
+                        <div style="font-size: 1.1rem; margin-bottom: 15px; opacity: 0.8;">متابع إنستجرام</div>
+                        <div class="package-price">85 جنيه</div>
+                        <button class="btn" onclick="selectPackage(500, 85)">
+                            <i class="fas fa-shopping-cart"></i> اختر الباقة
+                        </button>
+                    </div>
+
+                    <div class="package-card">
+                        <div class="package-amount">1000</div>
+                        <div style="font-size: 1.1rem; margin-bottom: 15px; opacity: 0.8;">متابع إنستجرام</div>
+                        <div class="package-price">150 جنيه</div>
+                        <button class="btn" onclick="selectPackage(1000, 150)">
+                            <i class="fas fa-shopping-cart"></i> اختر الباقة
+                        </button>
                     </div>
                 </div>
             </section>
         </div>
-    </div>
 
-    <!-- صفحة تسجيل الدخول -->
-    <div id="loginPage" class="page">
-        <div class="container">
+        <!-- صفحة تسجيل الدخول -->
+        <div id="loginPage" class="page">
             <header>
                 <div class="logo">
-                    <i class="fas fa-crown"></i>
-                    Roma Shop
+                    <i class="fas fa-crown"></i> Roma Shop
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
-                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
-                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                        <li><a href="#" onclick="showPage('homePage')">الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')">طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')">تسجيل الدخول</a></li>
                     </ul>
                 </nav>
             </header>
 
             <div class="login-form">
-                <h2 class="form-title">تسجيل الدخول</h2>
-                <p style="text-align: center; margin-bottom: 20px;">مرحباً بعودتك إلى Roma Shop</p>
+                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">تسجيل الدخول</h2>
+                <p style="text-align: center; margin-bottom: 30px; opacity: 0.8;">مرحباً بعودتك إلى Roma Shop</p>
 
                 <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" class="form-control" placeholder="example@email.com">
+                    <input type="email" class="form-control" placeholder="البريد الإلكتروني">
                 </div>
 
                 <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" class="form-control" placeholder="........">
+                    <input type="password" class="form-control" placeholder="كلمة المرور">
                 </div>
 
-                <button class="btn btn-accent" style="width: 100%;">تسجيل الدخول</button>
+                <button class="btn" style="width: 100%;">تسجيل الدخول</button>
             </div>
         </div>
-    </div>
 
-    <!-- صفحة الطلبات -->
-    <div id="ordersPage" class="page">
-        <div class="container">
+        <!-- صفحة الطلبات -->
+        <div id="ordersPage" class="page">
             <header>
                 <div class="logo">
-                    <i class="fas fa-crown"></i>
-                    Roma Shop
+                    <i class="fas fa-crown"></i> Roma Shop
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
-                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
-                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                        <li><a href="#" onclick="showPage('homePage')">الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')">طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')">تسجيل الدخول</a></li>
                     </ul>
                 </nav>
             </header>
@@ -185,74 +387,75 @@
                 <!-- الطلبات تظهر هنا -->
             </div>
         </div>
-    </div>
 
-    <!-- صفحة الدفع -->
-    <div id="paymentPage" class="page">
-        <div class="container">
+        <!-- صفحة الدفع -->
+        <div id="paymentPage" class="page">
             <header>
                 <div class="logo">
-                    <i class="fas fa-crown"></i>
-                    Roma Shop
+                    <i class="fas fa-crown"></i> Roma Shop
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#" onclick="showPage('homePage')"><i class="fas fa-home"></i> الرئيسية</a></li>
-                        <li><a href="#" onclick="showPage('ordersPage')"><i class="fas fa-list"></i> طلباتي</a></li>
-                        <li><a href="#" onclick="showPage('loginPage')"><i class="fas fa-user"></i> تسجيل الدخول</a></li>
+                        <li><a href="#" onclick="showPage('homePage')">الرئيسية</a></li>
+                        <li><a href="#" onclick="showPage('ordersPage')">طلباتي</a></li>
+                        <li><a href="#" onclick="showPage('loginPage')">تسجيل الدخول</a></li>
                     </ul>
                 </nav>
             </header>
 
             <div class="payment-page">
-                <h2 class="form-title">إتمام الطلب</h2>
+                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">إتمام الطلب</h2>
 
-                <div class="payment-info">
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 25px;">
                     <h3>بيانات الباقة المختارة</h3>
-                    <p id="selectedPackageInfo">باقة 100 متابع - 20 جنيه</p>
+                    <p id="selectedPackageInfo" style="font-size: 1.1rem; margin-top: 10px;">باقة 100 متابع - 20 جنيه</p>
                 </div>
 
-                <div class="payment-info">
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 25px;">
                     <h3>طريقة الدفع</h3>
-                    <div class="payment-details">
-                        <i class="fas fa-mobile-alt"></i>
+                    <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
+                        <i class="fas fa-mobile-alt" style="font-size: 30px; color: var(--accent);"></i>
                         <div>
-                            <p>الدفع عبر فودافون كاش</p>
-                            <p style="font-weight: bold; font-size: 18px;">01031090116</p>
+                            <p style="margin-bottom: 5px;">الدفع عبر فودافون كاش</p>
+                            <p style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">01031090116</p>
                         </div>
                     </div>
-                    <p>يرجى إرسال المبلغ إلى الرقم أعلاه ثم إرفاق صورة إيصال الدفع</p>
+                    <p style="opacity: 0.8; font-size: 0.9rem;">يرجى إرسال المبلغ إلى الرقم أعلاه ثم إرفاق صورة إيصال الدفع</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="username">اسم المستخدم في إنستجرام</label>
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">اسم المستخدم في إنستجرام</label>
                     <input type="text" id="username" class="form-control" placeholder="اسم المستخدم بدون @">
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">رقم الهاتف</label>
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">رقم الهاتف</label>
                     <input type="tel" id="phone" class="form-control" placeholder="رقم الهاتف للتواصل">
                 </div>
 
                 <div class="form-group">
-                    <label for="receipt">صورة إيصال الدفع</label>
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">صورة إيصال الدفع</label>
                     <input type="file" id="receipt" class="form-control" accept="image/*">
                 </div>
 
-                <button class="btn btn-accent" style="width: 100%;" onclick="submitOrder()">تأكيد الطلب</button>
+                <button class="btn" style="width: 100%;" onclick="submitOrder()">تأكيد الطلب</button>
             </div>
         </div>
     </div>
 
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <script>
-        // Firebase Configuration - أونلاين حقيقي
+        // Firebase Configuration - من اللي بعتتيه
         const firebaseConfig = {
-            apiKey: "AIzaSyBivKIbukDK-8LKpWAjHlXxaYxiRd2ieqc",
-            authDomain: "roma-shop-2e328.firebaseapp.com",
-            projectId: "roma-shop-2e328",
-            storageBucket: "roma-shop-2e328.firebasestorage.app",
-            messagingSenderId: "632843292993",
-            appId: "1:632843292993:web:2d8706665c09cc3ecb51c0"
+            apiKey: "AIzaSyA-Pi_g3EUeSgOeVii_OqodpDguMMyPknY",
+            authDomain: "romalshop.firebaseapp.com",
+            projectId: "romalshop",
+            storageBucket: "romalshop.firebasestorage.app",
+            messagingSenderId: "830369715807",
+            appId: "1:830369715807:web:fbfde9ded9daac6eb46dea"
         };
 
         // Initialize Firebase
@@ -261,55 +464,6 @@
 
         let selectedPackage = { amount: 0, price: 0 };
 
-        // Real-time listener للطلبات
-        function setupRealTimeListener() {
-            const ordersRef = db.collection('orders');
-            
-            // استماع لأي تغييرات في الطلبات
-            ordersRef.orderBy('timestamp', 'desc')
-                .onSnapshot((snapshot) => {
-                    const ordersList = document.getElementById('ordersList');
-                    if (!ordersList) return;
-                    
-                    if (snapshot.empty) {
-                        ordersList.innerHTML = `
-                            <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                                <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
-                                <h3>لا توجد طلبات حالياً</h3>
-                                <p>بمجرد إرسال طلبك، سيظهر هنا</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    let ordersHTML = '';
-                    snapshot.forEach(doc => {
-                        const order = doc.data();
-                        const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
-                        
-                        ordersHTML += `
-                            <div class="order-item">
-                                <div class="order-header">
-                                    <div>
-                                        <strong>طلب #${doc.id.slice(-6)}</strong>
-                                        <p>${order.package.amount} متابع - ${order.package.price} جنيه</p>
-                                    </div>
-                                    <div class="order-status ${statusClass}">${order.status}</div>
-                                </div>
-                                <p><strong>اسم المستخدم:</strong> @${order.username}</p>
-                                <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
-                                <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
-                                ${order.completedAt ? `<p><strong>تم الإرسال في:</strong> ${new Date(order.completedAt.toDate()).toLocaleString('ar-EG')}</p>` : ''}
-                            </div>
-                        `;
-                    });
-                    
-                    ordersList.innerHTML = ordersHTML;
-                }, (error) => {
-                    console.error('Error in real-time listener:', error);
-                });
-        }
-
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
@@ -317,8 +471,7 @@
             document.getElementById(pageId).classList.add('active');
             
             if (pageId === 'ordersPage') {
-                // تحميل الطلبات فوراً
-                setupRealTimeListener();
+                loadOrders();
             }
         }
 
@@ -345,19 +498,16 @@
                     phone,
                     status: 'قيد المراجعة',
                     date: new Date().toLocaleDateString('ar-EG'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    createdAt: new Date()
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                // حفظ الطلب في Firebase - أونلاين
                 await db.collection('orders').add(newOrder);
                 
                 alert('تم تقديم طلبك بنجاح! سيتم مراجعته قريباً.');
                 resetPaymentForm();
                 showPage('ordersPage');
             } catch (error) {
-                console.error('Error submitting order:', error);
-                alert('حدث خطأ أثناء إرسال الطلب. تأكد من اتصال الإنترنت وحاول مرة أخرى.');
+                alert('حدث خطأ أثناء إرسال الطلب. تأكد من اتصال الإنترنت.');
             }
         }
 
@@ -367,10 +517,55 @@
             document.getElementById('receipt').value = '';
         }
 
-        // تهيئة النظام عند التحميل
+        async function loadOrders() {
+            const ordersList = document.getElementById('ordersList');
+            
+            try {
+                const snapshot = await db.collection('orders')
+                    .orderBy('timestamp', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    ordersList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+                            <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3>لا توجد طلبات حالياً</h3>
+                            <p style="opacity: 0.7;">بمجرد إرسال طلبك، سيظهر هنا</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let ordersHTML = '';
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    const statusClass = order.status === 'تم الإرسال' ? 'status-completed' : 'status-pending';
+                    
+                    ordersHTML += `
+                        <div class="order-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <div>
+                                    <strong>طلب #${doc.id.slice(-6)}</strong>
+                                    <p style="margin-top: 5px; opacity: 0.8;">${order.package.amount} متابع - ${order.package.price} جنيه</p>
+                                </div>
+                                <span class="${statusClass}">${order.status}</span>
+                            </div>
+                            <p><strong>اسم المستخدم:</strong> @${order.username}</p>
+                            <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
+                            <p><strong>تاريخ الطلب:</strong> ${order.date}</p>
+                        </div>
+                    `;
+                });
+                
+                ordersList.innerHTML = ordersHTML;
+            } catch (error) {
+                ordersList.innerHTML = '<p style="text-align: center; color: var(--danger);">حدث خطأ في تحميل الطلبات</p>';
+            }
+        }
+
+        // Auto-load orders when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Roma Shop System Started - Online Mode');
-            setupRealTimeListener();
+            console.log('Roma Shop Started Successfully!');
         });
     </script>
 </body>
