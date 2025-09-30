@@ -26,6 +26,8 @@
             --success: #00C9A7;
             --warning: #FFC75F;
             --danger: #FF8066;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
         }
 
         body {
@@ -33,6 +35,7 @@
             color: var(--light);
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
@@ -47,12 +50,36 @@
             align-items: center;
             padding: 20px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .logo {
-            font-size: 28px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .logo-text {
+            font-size: 24px;
             font-weight: 800;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -60,7 +87,7 @@
         nav ul {
             display: flex;
             list-style: none;
-            gap: 20px;
+            gap: 15px;
         }
 
         nav a {
@@ -69,15 +96,48 @@
             padding: 10px 20px;
             border-radius: 25px;
             transition: 0.3s;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+            z-index: -1;
+            border-radius: 25px;
+        }
+
+        nav a:hover::before {
+            width: 100%;
         }
 
         nav a:hover {
-            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
         }
 
         .hero {
             text-align: center;
-            padding: 80px 0;
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            z-index: -1;
         }
 
         .hero h1 {
@@ -86,10 +146,20 @@
             background: linear-gradient(to right, var(--accent), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background: var(--gradient);
             color: white;
             padding: 15px 35px;
             border: none;
@@ -100,11 +170,29 @@
             transition: 0.3s;
             text-decoration: none;
             display: inline-block;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4);
+            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.6);
         }
 
         .features {
@@ -121,12 +209,30 @@
             text-align: center;
             border: 1px solid rgba(255,255,255,0.12);
             backdrop-filter: blur(10px);
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .feature-card i {
             font-size: 50px;
             margin-bottom: 20px;
-            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -139,6 +245,21 @@
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 3px;
         }
 
         .package-grid {
@@ -155,16 +276,29 @@
             border: 1px solid rgba(255,255,255,0.12);
             backdrop-filter: blur(10px);
             transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
         }
 
         .package-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .package-amount {
             font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
@@ -174,10 +308,17 @@
             font-size: 2.2rem;
             font-weight: 700;
             margin: 20px 0;
+            color: var(--light);
         }
 
         .page {
             display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .active {
@@ -192,6 +333,7 @@
             margin: 50px auto;
             border: 1px solid rgba(255,255,255,0.12);
             backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .form-group {
@@ -206,6 +348,13 @@
             background: rgba(255,255,255,0.05);
             color: white;
             font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.3);
         }
 
         .form-control::placeholder {
@@ -218,6 +367,12 @@
             margin-bottom: 15px;
             border-radius: 15px;
             border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+        }
+
+        .order-item:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(5px);
         }
 
         .status-pending {
@@ -237,6 +392,46 @@
             font-size: 14px;
             display: inline-block;
         }
+
+        /* تحسينات للشعار */
+        .logo-icon {
+            font-size: 24px;
+        }
+
+        /* تأثيرات إضافية */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* تحسينات للاستجابة */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .package-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -244,8 +439,11 @@
         <!-- الصفحة الرئيسية -->
         <div id="homePage" class="page active">
             <header>
-                <div class="logo">
-                    <i class="fas fa-crown"></i> Roma Shop
+                <div class="logo-container">
+                    <div class="logo floating">
+                        <i class="fas fa-crown logo-icon"></i>
+                    </div>
+                    <div class="logo-text">Roma Shop</div>
                 </div>
                 <nav>
                     <ul>
@@ -258,9 +456,7 @@
 
             <section class="hero">
                 <h1>مصدرك الموثوق لزيادة المتابعين</h1>
-                <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9;">
-                    احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار
-                </p>
+                <p>احصل على متابعين حقيقيين ونشطين لحساب إنستجرامك بأفضل الأسعار</p>
                 <a href="#packages" class="btn">
                     <i class="fas fa-shopping-cart"></i> ابدأ الآن
                 </a>
@@ -339,8 +535,11 @@
         <!-- صفحة تسجيل الدخول -->
         <div id="loginPage" class="page">
             <header>
-                <div class="logo">
-                    <i class="fas fa-crown"></i> Roma Shop
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-crown logo-icon"></i>
+                    </div>
+                    <div class="logo-text">Roma Shop</div>
                 </div>
                 <nav>
                     <ul>
@@ -370,8 +569,11 @@
         <!-- صفحة الطلبات -->
         <div id="ordersPage" class="page">
             <header>
-                <div class="logo">
-                    <i class="fas fa-crown"></i> Roma Shop
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-crown logo-icon"></i>
+                    </div>
+                    <div class="logo-text">Roma Shop</div>
                 </div>
                 <nav>
                     <ul>
@@ -391,8 +593,11 @@
         <!-- صفحة الدفع -->
         <div id="paymentPage" class="page">
             <header>
-                <div class="logo">
-                    <i class="fas fa-crown"></i> Roma Shop
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-crown logo-icon"></i>
+                    </div>
+                    <div class="logo-text">Roma Shop</div>
                 </div>
                 <nav>
                     <ul>
