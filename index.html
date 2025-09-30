@@ -1,407 +1,232 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
   <title>Roma Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
   <style>
-    :root{
-      --bg:#071028; --card:#0b1220; --muted:#94a3b8; --accent:#f59e0b;
-      --glass: rgba(255,255,255,0.03);
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #8e44ad, #3498db);
+      margin: 0; padding: 0;
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
     }
-    *{box-sizing:border-box;font-family: 'Noto Sans Arabic', Tahoma, Arial, sans-serif}
-    body{margin:0;background:linear-gradient(180deg,#071028 0%,#071130 100%);color:#e6eef8;min-height:100vh}
-    header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:linear-gradient(90deg,#0b1b2b,#071028)}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(45deg,#ef4444,#f97316);display:flex;align-items:center;justify-content:center;font-weight:700}
-    h1{margin:0;font-size:20px}
-    main{max-width:1100px;margin:20px auto;padding:16px;display:grid;grid-template-columns:1fr 420px;gap:18px}
-    .card{background:rgba(255,255,255,0.03);padding:16px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
-    .prices{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-    .pkg{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03)}
-    .pkg h3{margin:0 0 6px 0}
-    .price{font-weight:700;color:var(--accent)}
-    form{display:flex;flex-direction:column;gap:10px}
-    input,select,textarea{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;width:100%}
-    button{background:var(--accent);border:none;color:#07202a;padding:10px;border-radius:10px;cursor:pointer}
-    .small{color:var(--muted);font-size:13px}
-    footer{text-align:center;padding:12px;color:var(--muted)}
-    /* admin */
-    .admin-panel{max-height:70vh;overflow:auto}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:right}
-    th{background:rgba(255,255,255,0.02);font-weight:700}
-    .badge{padding:6px 8px;border-radius:999px;font-size:13px}
-    .status-pending{background:#f59e0b;color:#07202a}
-    .status-done{background:#10b981;color:#022c22}
-    .muted-ghost{color:rgba(230,238,248,0.6)}
-    .top-actions{display:flex;gap:8px;align-items:center}
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:50}
-    .modal.open{display:flex}
-    .panel{width:520px;max-width:95%}
-    .center{display:flex;flex-direction:column;gap:10px}
-    @media(max-width:980px){main{grid-template-columns:1fr} .side{position:relative}}
+    header {
+      background: rgba(0,0,0,0.6);
+      color: #fff; padding: 15px; font-size: 24px; font-weight: bold;
+      text-align: center; width: 100%;
+    }
+    .container {
+      max-width: 600px; width: 90%;
+      background: #fff; margin: 20px auto; padding: 25px;
+      border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    input, button {
+      width: 90%; padding: 12px; margin: 10px 0;
+      border-radius: 8px; border: 1px solid #ccc; font-size: 16px;
+    }
+    button {
+      background: #8e44ad; color: #fff; font-weight: bold;
+      border: none; cursor: pointer; transition: 0.3s;
+    }
+    button:hover { background: #732d91; transform: scale(1.05); }
+    .hidden { display: none; }
+    .packages { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .package {
+      flex: 1 1 40%; min-width: 120px;
+      border-radius: 10px; padding: 20px;
+      background: #f9f9f9; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      cursor: pointer; transition: 0.3s;
+    }
+    .package:hover { background: #f0e6f9; transform: translateY(-5px); }
+    .package h4 { margin: 0; color: #8e44ad; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ccc; padding: 8px; font-size: 14px; }
+    th { background: #eee; }
+    .status { padding: 4px 8px; border-radius: 6px; font-size: 13px; }
+    .pending { background: #f39c12; color: #fff; }
+    .done { background: #27ae60; color: #fff; }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo">RS</div>
-      <div>
-        <h1>Roma Shop</h1>
-        <div class="small">بيع متابعين إنستجرام — دفع فودافون كاش</div>
-      </div>
-    </div>
-    <div class="top-actions">
-      <button id="openAdminBtn">لوحة التحكم</button>
-    </div>
-  </header>
+  <header>Roma Shop</header>
 
-  <main>
-    <!-- LEFT: واجهة العميل -->
-    <section class="card">
-      <h2>باقات المتابعين</h2>
-      <div class="small">السعر = عدد المتابعين × 0.2 جنيه (مثال: 50 متابع = 10 ج)</div>
-      <div style="height:12px"></div>
-
-      <div class="prices" id="packages"></div>
-
-      <div style="height:14px"></div>
-      <div class="card">
-        <h3>اختيار مخصص</h3>
-        <div class="small">أدخل عدد المتابعين والسعر سيظهر تلقائياً</div>
-        <input id="customCount" type="number" placeholder="مثلاً 150 أو 1250 (لما فوق 1000 اترك خاص)" min="1">
-        <div class="small">السعر: <span id="customPrice">0</span> ج</div>
-        <div style="height:8px"></div>
-        <button id="buyCustom">اختيار هذا العدد</button>
-      </div>
-
-      <div style="height:14px"></div>
-
-      <div class="card">
-        <h3>اطلب الآن</h3>
-        <form id="orderForm">
-          <select id="selectedPackage" required>
-            <option value="">اختار الباقة أو اختر مخصص</option>
-          </select>
-          <input id="igUser" type="text" placeholder="يوزر إنستجرام (مثال: @username)" required>
-          <input id="phone" type="text" placeholder="رقم الموبايل (010xxxxxxx)" required>
-          <textarea id="notes" rows="3" placeholder="ملاحظات (اختياري)"></textarea>
-          <label class="small muted-ghost">ارفع صورة إيصال دفع فودافون كاش</label>
-          <input id="receipt" type="file" accept="image/*" required>
-          <div class="small">رقم التحويل: <strong>01031090116</strong></div>
-          <div style="height:6px"></div>
-          <div style="display:flex;gap:8px">
-            <button type="submit" style="flex:1">إرسال الطلب</button>
-            <button type="button" id="clearForm" style="background:#ef4444;color:white">مسح الاستمارة</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- RIGHT: لوحة الادمن (مخفية لحد ما يدخل بكلمة السر) -->
-    <aside class="card side">
-      <div class="card">
-        <h3>الحساب</h3>
-        <div class="small">لوحة التحكم خاصة بك فقط. للدخول اضغط "لوحة التحكم" وأدخل كلمة السر.</div>
-        <div style="height:10px"></div>
-        <div class="small">كلمة سر الأدمن: <strong>مخفية</strong></div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="card">
-        <h3>معلومات</h3>
-        <div class="small">عند الإرسال، سيطلب اليوزر رفع إيصال التحويل وكتابة يوزر الحساب ورقم للتواصل.</div>
-      </div>
-    </aside>
-  </main>
-
-  <footer>
-    Roma Shop • مصمم للعمل مع Firebase
-  </footer>
-
-  <!-- مودال إدخال باسورد الأدمن -->
-  <div class="modal" id="adminModal">
-    <div class="panel card center">
-      <h3>تسجيل دخول الأدمن</h3>
-      <input id="adminPassword" type="password" placeholder="أدخل كلمة السر">
-      <div style="display:flex;gap:8px">
-        <button id="adminLogin">دخول</button>
-        <button id="closeAdminModal">إغلاق</button>
-      </div>
-      <div class="small">لوحة التحكم محمية بكلمة سر محلية (M20071224m).</div>
-    </div>
+  <!-- Login/Register -->
+  <div class="container" id="auth-section">
+    <h3>تسجيل الدخول</h3>
+    <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+    <input type="password" id="loginPassword" placeholder="كلمة المرور">
+    <button onclick="login()">تسجيل الدخول</button>
+    <p>ليس لديك حساب؟ <a href="#" onclick="showRegister()">سجل الآن</a></p>
   </div>
 
-  <!-- مودال لوحة التحكم -->
-  <div class="modal" id="adminPanelModal">
-    <div class="panel card" style="max-height:85vh;overflow:auto">
-      <h3>لوحة التحكم — Roma Shop</h3>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="small">مجموع الطلبات: <span id="statCount">0</span></div>
-        <div style="display:flex;gap:8px">
-          <button id="adminLogout" style="background:#ef4444">خروج</button>
-          <button id="closeAdminPanel">إغلاق</button>
-        </div>
-      </div>
-      <div class="admin-panel" style="margin-top:12px">
-        <table>
-          <thead>
-            <tr><th>وقت</th><th>الباقة</th><th>يوزر</th><th>تليفون</th><th>المبلغ</th><th>الإيصال</th><th>الحالة</th><th>إجراءات</th></tr>
-          </thead>
-          <tbody id="ordersTbody"></tbody>
-        </table>
-      </div>
-    </div>
+  <div class="container hidden" id="register-section">
+    <h3>تسجيل حساب جديد</h3>
+    <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+    <input type="password" id="regPassword" placeholder="كلمة المرور">
+    <button onclick="register()">تسجيل</button>
+    <p><a href="#" onclick="showLogin()">لديك حساب؟ سجل دخول</a></p>
   </div>
 
-  <script type="module">
-    // ---------- imports Firebase (modular) ----------
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore, collection, addDoc, updateDoc, doc,
-      onSnapshot, query, orderBy, serverTimestamp, deleteDoc, getDocs
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+  <!-- User Shop -->
+  <div class="container hidden" id="shop-section">
+    <h3>اختر الباقة</h3>
+    <div class="packages" id="packages"></div>
+    <button onclick="logout()">تسجيل خروج</button>
+  </div>
 
-    // ---------- استخدم هنا config اللي انت عملته في Firebase Console ----------
-    const firebaseConfig = {
-      apiKey: "AIzaSyCg7c0q2nKJHykS2Qpp0ldoutG_29OBYkU",
-      authDomain: "romashop-62bf8.firebaseapp.com",
-      projectId: "romashop-62bf8",
-      storageBucket: "romashop-62bf8.firebasestorage.app",
-      messagingSenderId: "830956550573",
-      appId: "1:830956550573:web:8f40bedb6d05c87eecc924",
-      measurementId: "G-6KWHET1BWV"
-    };
+  <!-- Order Form -->
+  <div class="container hidden" id="order-section">
+    <h3>إكمال الطلب</h3>
+    <p>قم بالتحويل على رقم فودافون كاش: <b>01031090116</b></p>
+    <input type="text" id="instaUser" placeholder="اسم مستخدم إنستجرام">
+    <input type="text" id="phone" placeholder="رقم الموبايل">
+    <input type="file" id="receipt">
+    <button onclick="submitOrder()">إرسال الطلب</button>
+  </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
+  <!-- Admin Panel -->
+  <div class="container hidden" id="admin-section">
+    <h3>لوحة التحكم</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>المستخدم</th>
+          <th>الباقة</th>
+          <th>إنستجرام</th>
+          <th>هاتف</th>
+          <th>الحالة</th>
+          <th>إجراء</th>
+        </tr>
+      </thead>
+      <tbody id="ordersTable"></tbody>
+    </table>
+    <button onclick="logout()">تسجيل خروج</button>
+  </div>
 
-    // ---------- باقات جاهزة ----------
-    const packages = [50,100,150,200,250,300,350,400,450,500,600,700,800,900,1000];
+<script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCg7c0q2nKJHykS2Qpp0ldoutG_29OBYkU",
+    authDomain: "romashop-62bf8.firebaseapp.com",
+    projectId: "romashop-62bf8",
+    storageBucket: "romashop-62bf8.appspot.com",
+    messagingSenderId: "830956550573",
+    appId: "1:830956550573:web:8f40bedb6d05c87eecc924",
+    measurementId: "G-6KWHET1BWV"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 
-    // helpers
-    function priceFor(count){ return Math.round(count * 0.2 * 100) / 100; }
-    function fmtDate(ts){
-      try{
-        if(!ts) return '-';
-        if(ts.toDate) return ts.toDate().toLocaleString('ar-EG');
-        return new Date(ts).toLocaleString('ar-EG');
-      }catch(e){ return '-';}
-    }
+  const adminEmail = "admin@romashop.com"; // الأدمن اللي عملته في Firebase
 
-    // render الباقات والاختيارات
-    const packagesEl = document.getElementById('packages');
-    const selectedPackage = document.getElementById('selectedPackage');
-    packages.forEach(c=>{
-      const div = document.createElement('div'); div.className='pkg';
-      div.innerHTML = `<h3>${c} متابع</h3><div class="price">${priceFor(c)} ج</div><div class="small">سعر لكل متابع ${(priceFor(c)/c).toFixed(3)} ج</div><div style="height:8px"></div><button data-count="${c}">اختار</button>`;
-      packagesEl.appendChild(div);
+  const packages = [
+    {followers:50, price:10},
+    {followers:100, price:20},
+    {followers:200, price:40},
+    {followers:500, price:100},
+    {followers:1000, price:200}
+  ];
 
-      // option in select
-      const opt = document.createElement('option'); opt.value = c; opt.textContent = `${c} متابع — ${priceFor(c)} ج`;
-      selectedPackage.appendChild(opt);
+  let selectedPackage = null;
+
+  function showRegister(){document.getElementById("auth-section").classList.add("hidden");document.getElementById("register-section").classList.remove("hidden");}
+  function showLogin(){document.getElementById("register-section").classList.add("hidden");document.getElementById("auth-section").classList.remove("hidden");}
+
+  function login(){
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    auth.signInWithEmailAndPassword(email, password).then(()=>{
+      if(email===adminEmail){
+        loadOrders();
+        document.getElementById("admin-section").classList.remove("hidden");
+      }else{
+        renderPackages();
+        document.getElementById("shop-section").classList.remove("hidden");
+      }
+      document.getElementById("auth-section").classList.add("hidden");
+    }).catch(e=>alert(e.message));
+  }
+
+  function register(){
+    const email = document.getElementById("regEmail").value;
+    const password = document.getElementById("regPassword").value;
+    auth.createUserWithEmailAndPassword(email,password).then(()=>{
+      alert("تم التسجيل بنجاح، قم بتسجيل الدخول الآن");
+      showLogin();
+    }).catch(e=>alert(e.message));
+  }
+
+  function logout(){auth.signOut().then(()=>location.reload());}
+
+  function renderPackages(){
+    const div = document.getElementById("packages");
+    div.innerHTML="";
+    packages.forEach(p=>{
+      const el = document.createElement("div");
+      el.className="package";
+      el.innerHTML=`<h4>${p.followers} متابع</h4><p>${p.price} جنيه</p>`;
+      el.onclick=()=>{selectedPackage=p;document.getElementById("shop-section").classList.add("hidden");document.getElementById("order-section").classList.remove("hidden");};
+      div.appendChild(el);
     });
+  }
 
-    document.querySelectorAll('.pkg button').forEach(b=>{
-      b.addEventListener('click', e=>{
-        const cnt = e.target.dataset.count;
-        selectedPackage.value = cnt;
-        window.scrollTo({top:0,behavior:'smooth'});
+  async function submitOrder(){
+    const instaUser=document.getElementById("instaUser").value;
+    const phone=document.getElementById("phone").value;
+    const file=document.getElementById("receipt").files[0];
+    let fileURL="";
+    if(file){
+      const ref=storage.ref("receipts/"+Date.now()+"_"+file.name);
+      await ref.put(file);
+      fileURL=await ref.getDownloadURL();
+    }
+    await db.collection("orders").add({
+      user:auth.currentUser.email,
+      package:selectedPackage,
+      instaUser, phone,
+      receipt:fileURL,
+      status:"قيد المراجعة"
+    });
+    alert("تم إرسال الطلب بنجاح");
+    location.reload();
+  }
+
+  function loadOrders(){
+    db.collection("orders").onSnapshot(snap=>{
+      const tbody=document.getElementById("ordersTable");
+      tbody.innerHTML="";
+      snap.forEach(doc=>{
+        const data=doc.data();
+        const tr=document.createElement("tr");
+        tr.innerHTML=`
+          <td>${data.user}</td>
+          <td>${data.package.followers} متابع - ${data.package.price}ج</td>
+          <td>${data.instaUser}</td>
+          <td>${data.phone}</td>
+          <td><span class="status ${data.status==="قيد المراجعة"?"pending":"done"}">${data.status}</span></td>
+          <td>${data.status==="قيد المراجعة"?`<button onclick="markDone('${doc.id}')">اكتمل</button>`:""}</td>
+        `;
+        tbody.appendChild(tr);
       });
     });
+  }
 
-    // custom count
-    const customCount = document.getElementById('customCount');
-    const customPrice = document.getElementById('customPrice');
-    customCount.addEventListener('input', e=>{
-      const v = parseInt(e.target.value)||0;
-      customPrice.innerText = priceFor(v) + ' ج';
-    });
-    document.getElementById('buyCustom').addEventListener('click', ()=>{
-      const v = parseInt(customCount.value)||0;
-      if(v <= 0){ alert('اكتب عدد صحيح أكبر من 0'); return; }
-      selectedPackage.value = 'custom-' + v;
-      const opt = Array.from(selectedPackage.options).find(o=>o.value === selectedPackage.value);
-      if(!opt){
-        const newOpt = document.createElement('option'); newOpt.value = selectedPackage.value; newOpt.textContent = `${v} متابع — ${priceFor(v)} ج (مخصص)`; selectedPackage.appendChild(newOpt);
-      }
-      selectedPackage.value = 'custom-' + v;
-      window.scrollTo({top:0,behavior:'smooth'});
-    });
-
-    // ---------- ارسال الطلب ----------
-    const orderForm = document.getElementById('orderForm');
-    orderForm.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      try{
-        const selVal = selectedPackage.value;
-        if(!selVal){ alert('اختار باقة أو أدخل مخصص'); return; }
-        let count;
-        if(selVal.startsWith('custom-')) count = parseInt(selVal.split('-')[1]) || 0;
-        else count = parseInt(selVal);
-
-        if(!count || count <= 0){ alert('عدد غير صالح'); return; }
-
-        const igUser = document.getElementById('igUser').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const notes = document.getElementById('notes').value.trim();
-        const receiptFile = document.getElementById('receipt').files[0];
-        if(!igUser || !phone || !receiptFile){ alert('اكمل جميع الحقول وارفق الإيصال'); return; }
-
-        // ارفع الصورة إلى Storage
-        const uniquePath = `receipts/${Date.now()}_${Math.random().toString(36).slice(2)}_${receiptFile.name}`;
-        const storageRef = sRef(storage, uniquePath);
-        await uploadBytes(storageRef, receiptFile);
-        const receiptURL = await getDownloadURL(storageRef);
-
-        // احفظ الطلب في Firestore
-        await addDoc(collection(db, 'orders'), {
-          packageCount: count,
-          price: priceFor(count),
-          igUser, phone, notes,
-          receiptURL,
-          receiptPath: uniquePath,
-          status: 'قيد المراجعة ⏳',
-          createdAt: serverTimestamp()
-        });
-
-        alert('✅ تم إرسال طلبك بنجاح — سيتم مراجعته قريباً');
-        orderForm.reset();
-      }catch(err){
-        console.error(err);
-        alert('حصل خطأ أثناء إرسال الطلب، جرب مرة تانية');
-      }
-    });
-
-    document.getElementById('clearForm').addEventListener('click', ()=>orderForm.reset());
-
-    // ---------- ادمن: فتح المودال والتحقق من كلمة السر ----------
-    const adminBtn = document.getElementById('openAdminBtn');
-    const adminModal = document.getElementById('adminModal');
-    const adminPanelModal = document.getElementById('adminPanelModal');
-    const adminLoginBtn = document.getElementById('adminLogin');
-    const adminPasswordInput = document.getElementById('adminPassword');
-    const closeAdminModal = document.getElementById('closeAdminModal');
-    const closeAdminPanel = document.getElementById('closeAdminPanel');
-    const adminLogout = document.getElementById('adminLogout');
-
-    const ADMIN_PASSWORD = 'M20071224m'; // كلمة السر اللي طلبتها
-
-    adminBtn.addEventListener('click', ()=>{ adminModal.classList.add('open'); adminPasswordInput.value=''; adminPasswordInput.focus(); });
-
-    closeAdminModal.addEventListener('click', ()=>adminModal.classList.remove('open'));
-    closeAdminPanel.addEventListener('click', ()=>adminPanelModal.classList.remove('open'));
-
-    adminLoginBtn.addEventListener('click', ()=>{
-      const pw = adminPasswordInput.value;
-      if(pw === ADMIN_PASSWORD){
-        sessionStorage.setItem('roma_admin','1');
-        adminModal.classList.remove('open');
-        openAdminPanel();
-      } else {
-        alert('كلمة السر خاطئة');
-      }
-    });
-
-    adminLogout.addEventListener('click', ()=>{
-      sessionStorage.removeItem('roma_admin');
-      adminPanelModal.classList.remove('open');
-      stopOrdersListener();
-    });
-
-    // اختار يفتح لوحة الادمن لو محفوظه
-    if(sessionStorage.getItem('roma_admin') === '1'){
-      openAdminPanel();
-    }
-
-    // ---------- رصد الطلبات في الوقت الحقيقي واظهارها ----------
-    let unsubscribeOrders = null;
-    const ordersTbody = document.getElementById('ordersTbody');
-    const statCount = document.getElementById('statCount');
-
-    function stopOrdersListener(){
-      if(typeof unsubscribeOrders === 'function') unsubscribeOrders();
-      unsubscribeOrders = null;
-      ordersTbody.innerHTML = '';
-      statCount.innerText = '0';
-    }
-
-    function openAdminPanel(){
-      // افتح المودال
-      adminPanelModal.classList.add('open');
-
-      // استمع لطلبات firestore بترتيب حسب الاحدث
-      const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-      unsubscribeOrders = onSnapshot(q, (snap)=>{
-        ordersTbody.innerHTML = '';
-        statCount.innerText = snap.size;
-        snap.forEach(docSnap=>{
-          const d = docSnap.data();
-          const id = docSnap.id;
-          const tr = document.createElement('tr');
-
-          const timeCell = `<td style="min-width:150px">${fmtDate(d.createdAt)}</td>`;
-          const packCell = `<td>${d.packageCount || '-'} متابع</td>`;
-          const userCell = `<td>${d.igUser || '-'}</td>`;
-          const phoneCell = `<td>${d.phone || '-'}</td>`;
-          const priceCell = `<td>${(d.price!==undefined)?d.price+' ج':'-'}</td>`;
-          const receiptCell = `<td>${d.receiptURL?`<a href="${d.receiptURL}" target="_blank">عرض</a>`:'-'}</td>`;
-          const statusClass = (d.status && d.status.includes('تم')) ? 'status-done' : 'status-pending';
-          const statusCell = `<td><span class="badge ${statusClass}">${d.status || '-'}</span></td>`;
-
-          const actionsCell = document.createElement('td');
-          // action buttons
-          const toggleBtn = document.createElement('button');
-          toggleBtn.textContent = (d.status && d.status.includes('تم')) ? 'إرجاع لقيد المراجعة' : 'تم التسليم';
-          toggleBtn.style.marginRight = '6px';
-          toggleBtn.addEventListener('click', async ()=>{
-            try{
-              const newStatus = (d.status && d.status.includes('تم')) ? 'قيد المراجعة ⏳' : 'تم الاستلام ✅';
-              await updateDoc(doc(db, 'orders', id), { status: newStatus });
-            }catch(err){ console.error(err); alert('فشل تحديث الحالة') }
-          });
-
-          const delBtn = document.createElement('button');
-          delBtn.textContent = 'حذف';
-          delBtn.style.background = '#ef4444';
-          delBtn.style.color = '#fff';
-          delBtn.addEventListener('click', async ()=>{
-            if(!confirm('هل متأكد من حذف هذا الطلب؟')) return;
-            try{
-              // حذف الوثيقة
-              const docRef = doc(db, 'orders', id);
-              // حاول نحذف الملف من storage لو فيه receiptPath
-              if(d.receiptPath){
-                try{ await deleteObject(sRef(storage, d.receiptPath)); }catch(e){ console.warn('حذف الإيصال فشل أو غير موجود', e) }
-              }
-              await deleteDoc(docRef);
-            }catch(err){ console.error(err); alert('فشل حذف الطلب') }
-          });
-
-          actionsCell.appendChild(toggleBtn);
-          actionsCell.appendChild(delBtn);
-
-          tr.innerHTML = timeCell + packCell + userCell + phoneCell + priceCell + receiptCell + statusCell;
-          const tdActions = document.createElement('td'); tdActions.appendChild(actionsCell);
-          tr.appendChild(tdActions);
-
-          ordersTbody.appendChild(tr);
-        });
-      }, (err) => {
-        console.error('snapshot error', err);
-        alert('حدث خطأ أثناء جلب الطلبات');
-      });
-    }
-
-    // اغلاق المودال اذا ضغط على السطح الخارجي
-    document.querySelectorAll('.modal').forEach(m=>{
-      m.addEventListener('click', (e)=>{ if(e.target === m) { m.classList.remove('open'); } });
-    });
-
-  </script>
+  function markDone(id){
+    db.collection("orders").doc(id).update({status:"تم الاستلام"});
+  }
+</script>
 </body>
 </html>
